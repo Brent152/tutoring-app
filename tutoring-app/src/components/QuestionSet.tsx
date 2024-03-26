@@ -1,34 +1,59 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, CircularProgress, Toolbar, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { QuestionModel } from '../models/QuestionModel';
+import QuestionsService from '../services/QuestionsService';
 import QuestionCard from './QuestionCard';
-import QuestionNavigator from './QuestionNavigator';
+import QuestionNavigator from './QuestionDropdown';
 
 interface QuestionSetProps {
-    questions: QuestionModel[];
+    setId: number;
 }
 
-const QuestionSet: React.FC<QuestionSetProps> = ({ questions }) => {
+const QuestionSet: React.FC<QuestionSetProps> = (props) => {
+
+    const [questions, setQuestions] = useState<QuestionModel[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-    const handleNext = () => {
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            const result = await QuestionsService.getQuestionSet(1);
+            setQuestions(result);
+            console.log(questions)
+        };
+
+        fetchQuestions();
+    }, []);
+
+    if (questions.length === 0) {
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <CircularProgress />
+        </div>
+    }
+
+    const handleNextPressed = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     };
 
-    const handlePrev = () => {
+    const handlePreviousPressed = () => {
         if (currentQuestionIndex > 0) {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
     };
 
-    const onQuestionNavigate = () => (index: number) => {
-        setCurrentQuestionIndex(index)
+    function handleAnswerChange(questionId: number, answerId: number): void {
+        console.log(answerId)
+        setQuestions(questions.map((question) => {
+            if (question.id === questionId) {
+                question.selectedAnswerId = answerId;
+            }
+            return question;
+        }));
+        console.log(questions.find(x => x.id === questionId));
     }
 
-    
     return (
         <Box sx={{
             height: '90vh',
@@ -43,16 +68,13 @@ const QuestionSet: React.FC<QuestionSetProps> = ({ questions }) => {
                     </Typography>
                 </Toolbar>
             </AppBar>
-
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: 'end',
                 paddingInline: 5,
                 paddingBlock: 3
             }}>
-                <div>Temp Space</div>
-
-                <QuestionNavigator questions={questions} onSelect={onQuestionNavigate()} />
+                <QuestionNavigator questions={questions} currentQuestionIndex={currentQuestionIndex} onQuestionChange={(index) => setCurrentQuestionIndex(index)} />
             </Box>
             <Box sx={{
                 display: 'flex',
@@ -61,7 +83,7 @@ const QuestionSet: React.FC<QuestionSetProps> = ({ questions }) => {
                 justifyContent: 'center',
                 paddingInline: 5
             }}>
-                <QuestionCard question={questions[currentQuestionIndex]} />
+                {<QuestionCard question={questions[currentQuestionIndex] ?? new QuestionModel(-1)} onAnswerChange={handleAnswerChange} />}
                 <Box sx={{
                     display: 'flex',
                     width: '100%',
@@ -69,15 +91,24 @@ const QuestionSet: React.FC<QuestionSetProps> = ({ questions }) => {
                     justifyContent: 'space-between',
                     marginTop: 3
                 }}>
-                    <Button variant="contained" onClick={handlePrev} disabled={currentQuestionIndex === 0}>
+                    <Button variant="contained" onClick={handlePreviousPressed} disabled={currentQuestionIndex === 0}>
                         Previous
                     </Button>
-                    <Button variant="contained" onClick={handleNext} disabled={currentQuestionIndex === questions.length - 1}>
+                    <Button variant="contained" onClick={handleNextPressed} disabled={currentQuestionIndex === questions.length - 1}>
                         Next
                     </Button>
                 </Box>
             </Box>
-
+            {/* <Button sx={{ border: 1, marginTop: 5, height: 50, width: '100%' }} onClick={async () => {
+                try {
+                    const data = await QuestionsService.getQuestionSet(1);
+                    console.log("Document data:", data);
+                } catch (error) {
+                    console.error(error);
+                }
+            }}>
+                TEST BUTTON
+            </Button> */}
         </Box>
     );
 };
