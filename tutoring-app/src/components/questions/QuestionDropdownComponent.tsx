@@ -1,6 +1,6 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useEffect } from 'react';
-import { QuestionModel } from '../models/QuestionModel';
+import { QuestionModel } from '../../models/QuestionModel';
 
 interface QuestionDropdownProps {
   currentQuestionIndex: number;
@@ -8,7 +8,7 @@ interface QuestionDropdownProps {
   onQuestionChange: (questionId: number) => void;
 }
 
-const QuestionDropdown: React.FC<QuestionDropdownProps> = ({ questions, currentQuestionIndex: currentQuestionIndex, onQuestionChange }) => {
+const QuestionDropdownComponent: React.FC<QuestionDropdownProps> = ({ questions, currentQuestionIndex: currentQuestionIndex, onQuestionChange }) => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = React.useState<number | ''>(currentQuestionIndex);
 
   useEffect(() => {
@@ -39,4 +39,4 @@ const QuestionDropdown: React.FC<QuestionDropdownProps> = ({ questions, currentQ
   );
 };
 
-export default QuestionDropdown;
+export default QuestionDropdownComponent;
