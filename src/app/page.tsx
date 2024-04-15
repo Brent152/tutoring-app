@@ -4,14 +4,13 @@ export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
 
-  const posts = await db.query.posts.findMany();
+  const posts = await db.query.users.findMany();
 
   return (
     <main className="">
       <div className="bg-neutral-800">
-        {posts.map((post) => (<div key={post.id}>{post.name}</div>))}
-        {posts.toLocaleString()}
-        Hello page!
+        Users:
+        {posts.map((user) => (<div key={user.id}>{user.firstName} {user.lastName}</div>))}
       </div>
     </main>
   );
