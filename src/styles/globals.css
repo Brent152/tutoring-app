@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+Tailwind CSS Classes for Dark Theme Equivalents
+
+Backgrounds
+Main Background: bg-neutral-800
+
+Text Colors
+Main Text: text-neutral-200
+
+Border Colors
+Main Border: border-neutral-600
+
+Notification Colors
+
+*/
+
+body {
+    @apply bg-neutral-800 text-neutral-200;
+}
