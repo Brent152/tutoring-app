@@ -6,7 +6,7 @@ export default {
   schema: "./src/server/db/schema.ts",
   driver: "pg",
   dbCredentials: {
-    connectionString: env.POSTGRES_URL,
+    connectionString: env.DATABASE_URL,
   },
   tablesFilter: ["tutoring-app_*"],
 } satisfies Config;
