@@ -5,10 +5,10 @@ import { QuestionModel } from '../../models/QuestionModel';
 interface QuestionDropdownProps {
   currentQuestionIndex: number;
   questions: QuestionModel[];
-  onQuestionChange: (questionId: number) => void;
+  onQuestionChange: (currentQuestionIndex: number, newQuestionIndex: number) => void;
 }
 
-const QuestionDropdownComponent: React.FC<QuestionDropdownProps> = ({ questions, currentQuestionIndex: currentQuestionIndex, onQuestionChange }) => {
+const QuestionNavigator: React.FC<QuestionDropdownProps> = ({ questions, currentQuestionIndex: currentQuestionIndex, onQuestionChange }) => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = React.useState<number | ''>(currentQuestionIndex);
 
   useEffect(() => {
@@ -16,9 +16,9 @@ const QuestionDropdownComponent: React.FC<QuestionDropdownProps> = ({ questions,
   }, [currentQuestionIndex]);
 
   const handleChange = (event: SelectChangeEvent<number>) => {
-    const questionIndex = Number(event.target.value);
-    setSelectedQuestionIndex(questionIndex);
-    onQuestionChange(questionIndex);
+    const newQuestionIndex = Number(event.target.value);
+    onQuestionChange(currentQuestionIndex, newQuestionIndex);
+    setSelectedQuestionIndex(newQuestionIndex);
   };
 
   return (
@@ -39,4 +39,4 @@ const QuestionDropdownComponent: React.FC<QuestionDropdownProps> = ({ questions,
   );
 };
 
-export default QuestionDropdownComponent;
+export default QuestionNavigator;

@@ -150,16 +150,16 @@ class QuestionsService {
         questionsQuerySnapshot.forEach((doc) => {
             const docData = doc.data();
             if (docData) {
-                const question: QuestionModel = {
-                    id: doc.id,
-                    setId: docData.questionSetId,
-                    text: docData.text,
-                    answers: docData.answers,
-                    correctAnswerId: docData.correctAnswerId,
-                    selectedAnswerId: docData.selectedAnswerId,
-                };
+                const question = new QuestionModel();
+                question.id = doc.id;
+                question.setId = docData.questionSetId;
+                question.text = docData.text;
+                question.answers = docData.answers;
+                question.correctAnswerId = docData.correctAnswerId;
+                question.selectedAnswerId = docData.selectedAnswerId;
+                question.visits = docData.visits;
                 questions.push(question);
-            }
+              }
         });
 
         const questionSetDocRef = doc(db, 'QuestionSets', setId.toString());

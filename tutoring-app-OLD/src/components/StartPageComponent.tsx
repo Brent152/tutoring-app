@@ -5,6 +5,7 @@ import { QuestionSetModel } from '../models/QuestionSetModel';
 import { UserModel } from '../models/UserModel';
 import QuestionsService from '../services/QuestionsService';
 import UserService from '../services/UserService';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface StartPageComponentProps {
     setCurrentUser: (user: UserModel) => void;
@@ -18,6 +19,7 @@ const StartPageComponent: React.FC<StartPageComponentProps> = (props) => {
     const [userOptions, setUserOptions] = useState<UserModel[]>();
     const [questionSetOptions, setQuestionSetOptions] = useState<QuestionSetModel[]>();
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchLookups = async () => {
@@ -52,7 +54,7 @@ const StartPageComponent: React.FC<StartPageComponentProps> = (props) => {
         </div>
     }
 
-    if (!userOptions || userOptions.length === 0 ) {
+    if (!userOptions || userOptions.length === 0) {
         return <Typography variant="h6" component="div">No Users Found</Typography>
     }
 
@@ -68,13 +70,14 @@ const StartPageComponent: React.FC<StartPageComponentProps> = (props) => {
         }}>
             <Box sx={{
                 display: 'flex',
+                flexDirection: 'column',
                 gap: 4,
                 alignItems: 'center',
                 justifyContent: 'center',
                 paddingInline: 5,
                 height: '100%',
             }}>
-                <FormControl sx={{ minWidth: 300 }}>
+                <FormControl sx={{ minWidth: 400 }}>
                     <InputLabel id="user-dropdown-label">Select User</InputLabel>
                     <Select
                         labelId="user-dropdown-label"
@@ -91,7 +94,8 @@ const StartPageComponent: React.FC<StartPageComponentProps> = (props) => {
                         )}
                     </Select>
                 </FormControl>
-                <FormControl sx={{ minWidth: 300 }}>
+
+                <FormControl sx={{ minWidth: 400 }}>
                     <InputLabel id="set-options-dropdown-label">Select Question Set</InputLabel>
                     <Select
                         labelId="set-options-dropdown-label"
@@ -108,6 +112,11 @@ const StartPageComponent: React.FC<StartPageComponentProps> = (props) => {
                         )}
                     </Select>
                 </FormControl>
+                <Button variant="contained" sx={{alignSelf: 'end'}}
+                    disabled={!props.currentUser || !props.currentQuestionSet?.id}
+                    onClick={() => navigate(`/question-set/${props.currentQuestionSet!.id}`)}>
+                    Start
+                </Button>
             </Box>
         </Box>
     );

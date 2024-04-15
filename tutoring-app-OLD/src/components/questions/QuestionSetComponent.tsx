@@ -7,6 +7,8 @@ import QuestionsService from '../../services/QuestionsService';
 import QuestionCardComponent from './QuestionCardComponent';
 import QuestionNavigator from './QuestionDropdownComponent';
 import { QuestionModel } from '../../models/QuestionModel';
+import QuestionsUtility from '../../utilities/QuestionsUtility';
+import ChatGPTService from '../../services/ChatGPTService';
 
 interface QuestionSetProps {
     setId: string;
@@ -15,9 +17,9 @@ interface QuestionSetProps {
 
 const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
 
-    const [questionSet, setQuestionSet] = useState<QuestionSetModel>();
+    const [questionSet, setQuestionSet] = useState<QuestionSetModel | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [studentConfidenceQuestion, setStudentConfidenceQuestion] = useState<QuestionModel>();
+    const [studentConfidenceQuestion, setStudentConfidenceQuestion] = useState<QuestionModel | null>(null);
     const [studentConfidenceSubmitted, setStudentConfidenceSubmitted] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -28,7 +30,6 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
             setQuestionSet(result);
             setStudentConfidenceQuestion(QuestionsService.getConfidenceQuestion(result))
             setIsLoading(false);
-            console.log(result)
         };
 
         fetchQuestions();
@@ -56,23 +57,65 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
         </Typography>
     }
 
-    const handleNextPressed = () => {
-        if (!questionSet) return;
-        if (currentQuestionIndex < questionSet.questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
+    const handleQuestionChanged = (currentQuestionIndex: number | null, newQuestionIndex: number | null) => {
+        if (!questionSet) return null;
+        if (currentQuestionIndex !== null) {
+            handleQuestionNavigatedAway(questionSet.questions[currentQuestionIndex].id!);
+        }
+        if (newQuestionIndex !== null && newQuestionIndex >= 0 && newQuestionIndex < questionSet.questions.length) {
+            setCurrentQuestionIndex(newQuestionIndex);
+            handleQuestionPresented(questionSet.questions[newQuestionIndex].id!);
         }
     };
 
-    const handlePreviousPressed = () => {
-        if (!questionSet) return;
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(currentQuestionIndex - 1);
-        }
-    };
+    function handleQuestionPresented(questionId: string): void {
+        const currentTime = new Date();
+        setQuestionSet((prevQuestionSet) => {
+            if (!prevQuestionSet) return null;
+            let newSet = {
+                ...prevQuestionSet,
+                questions: prevQuestionSet.questions.map((question) => {
+                    if (question.id === questionId) {
+                        if (!question.visits) {
+                            question.visits = [];
+                        }
+
+                        return {
+                            ...question,
+                            visits: [...question.visits, { startTime: currentTime, endTime: null }],
+                        };
+                    }
+                    return question;
+                }),
+            };
+
+            return newSet
+        });
+    }
+
+    function handleQuestionNavigatedAway(questionId: string): void {
+        const currentTime = new Date();
+        setQuestionSet((prevQuestionSet) => {
+            if (!prevQuestionSet) return null;
+            return {
+                ...prevQuestionSet,
+                questions: prevQuestionSet.questions.map((question) => {
+                    if (question.id === questionId && question.visits.length > 0 && question.visits[question.visits.length - 1].endTime === null) {
+                        const updatedVisits = [...question.visits];
+                        updatedVisits[updatedVisits.length - 1] = { ...updatedVisits[updatedVisits.length - 1], endTime: currentTime };
+                        return {
+                            ...question,
+                            visits: updatedVisits,
+                        };
+                    }
+                    return question;
+                }),
+            };
+        });
+    }
 
     function handleAnswerChange(questionId: string, answerId: string): void {
         if (!questionSet) return;
-        console.log(answerId)
         setQuestionSet(
             {
                 ...questionSet,
@@ -84,7 +127,6 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
                         return question;
                     })
             });
-        console.log(questionSet.questions.find(x => x.id === questionId));
     }
 
     if (!questionSet) {
@@ -95,7 +137,6 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
         <Box sx={{
             border: 2,
             borderColor: blue[500],
-            height: '100%',
             width: '100%'
         }}>
             <AppBar position="static">
@@ -111,7 +152,7 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
                 paddingInline: 5,
                 paddingBlock: 3
             }}>
-                {studentConfidenceSubmitted && <QuestionNavigator questions={questionSet.questions} currentQuestionIndex={currentQuestionIndex} onQuestionChange={(index) => setCurrentQuestionIndex(index)} />}
+                {studentConfidenceSubmitted && <QuestionNavigator questions={questionSet.questions} currentQuestionIndex={currentQuestionIndex} onQuestionChange={handleQuestionChanged} />}
             </Box>
             <Box sx={{
                 display: 'flex',
@@ -121,17 +162,17 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
                 paddingInline: 5
             }}>
                 {studentConfidenceSubmitted ?
-                    <QuestionCardComponent question={questionSet?.questions[currentQuestionIndex]} onAnswerChange={handleAnswerChange} />
+                    <QuestionCardComponent question={questionSet?.questions[currentQuestionIndex]}
+                        onAnswerChange={handleAnswerChange} />
                     :
                     <>
                         <QuestionCardComponent question={studentConfidenceQuestion!}
                             onAnswerChange={(_, answerId: string) => setStudentConfidenceQuestion(prevState => {
-                                if (prevState) {
-                                    return {
-                                        ...prevState,
-                                        selectedAnswerId: answerId
-                                    };
-                                }
+                                if (!prevState) return null;
+                                return {
+                                  ...prevState,
+                                  selectedAnswerId: answerId
+                                };
                             })} />
                     </>
                 }
@@ -142,21 +183,33 @@ const QuestionSetComponent: React.FC<QuestionSetProps> = (props) => {
                     justifyContent: 'space-between',
                     marginTop: 3
                 }}>
-                    <Button variant="contained" onClick={handlePreviousPressed} disabled={currentQuestionIndex === 0 || !studentConfidenceSubmitted}>
+                    <Button variant="contained"
+                        onClick={() => handleQuestionChanged(currentQuestionIndex, currentQuestionIndex - 1)} disabled={currentQuestionIndex === 0 || !studentConfidenceSubmitted}>
                         Previous
                     </Button>
-                    <Button variant="contained" onClick={studentConfidenceSubmitted ? handleNextPressed : () => { setStudentConfidenceSubmitted(true) }} disabled={currentQuestionIndex === questionSet.questions.length - 1 || !studentConfidenceQuestion?.selectedAnswerId}>
+                    <Button variant="contained"
+                        onClick={studentConfidenceSubmitted ? () => { handleQuestionChanged(currentQuestionIndex, currentQuestionIndex + 1) } : () => { setStudentConfidenceSubmitted(true); handleQuestionChanged(null, 0) }}
+                        disabled={currentQuestionIndex === questionSet.questions.length - 1 || !studentConfidenceQuestion?.selectedAnswerId}>
                         Next
                     </Button>
                 </Box>
             </Box>
             <Button sx={{ border: 1, marginTop: 5, height: 50, width: '100%' }} onClick={async () => {
                 try {
-                    console.log(currentQuestionIndex)
+                    console.log(QuestionsUtility.getTotalTimeSpent(questionSet.questions[currentQuestionIndex]))
+                    console.log(questionSet.questions[currentQuestionIndex].visits.length);
                 } catch (error) {
                     console.error(error);
                 }
             }}>TEST BUTTON</Button>
+                        <Button sx={{ border: 1, marginTop: 5, height: 50, width: '100%' }} onClick={async () => {
+                try {
+                    let result = await ChatGPTService.sendMessageToGPT3("test message");
+                    console.log(result);
+                } catch (error) {
+                    console.error(error);
+                }
+            }}>Test ChatGPT</Button>
         </Box>
     );
 };
