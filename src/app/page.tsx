@@ -10,6 +10,7 @@ export default async function HomePage() {
     <main className="">
       <div className="bg-neutral-800">
         {posts.map((post) => (<div key={post.id}>{post.name}</div>))}
+        {posts.toLocaleString()}
         Hello page!
       </div>
     </main>
