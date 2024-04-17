@@ -35,9 +35,9 @@ export const users = pgTable('users', {
 
 export const questionSets = pgTable('question_sets', {
   id: serial("id").primaryKey(),
-  description: varchar("text", { length: 2048 }),
-  subject: varchar("text", { length: 256 }),
-  title: varchar("text", { length: 256 }),
+  description: varchar("description", { length: 2048 }),
+  subject: varchar("subject", { length: 256 }),
+  title: varchar("title", { length: 256 }),
 
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
