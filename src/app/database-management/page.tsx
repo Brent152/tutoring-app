@@ -17,7 +17,7 @@ export default function DatabaseManagement() {
 
     return (
         <main className="">
-            <Button onClick={insertPythonQuiz}>Add Python Quiz</Button>
+            <Button disabled onClick={insertPythonQuiz}>Add Python Quiz</Button>
         </main>
     );
 }
