@@ -1,4 +1,4 @@
-export interface AnswerType {
+export interface AnswerModel {
     id: number;
     text: string;
     questionId: number;

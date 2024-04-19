@@ -1,46 +1,53 @@
 'use client';
 
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import HelpComponent from '~/components/HelpComponent';
 import QuestionComponentSkeleton from '~/components/QuestionComponentSkeleton';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
-import { QuestionSetType } from '~/interfaces/question-set-type';
+import { QuestionModel } from '~/interfaces/question-model';
+import { QuestionSetModel } from '~/interfaces/question-set-model';
 import { trpc } from '~/trpc/react';
 import QuestionComponent from '../../../components/QuestionComponent';
-import { ChevronLeftIcon, ChevronRightIcon, HomeIcon, LucideChevronLeft } from 'lucide-react';
-import { useQueries } from '@tanstack/react-query';
-import { QuestionType } from '~/interfaces/question-type';
+import { MessageModel } from '~/interfaces/message-model';
+import { Senders } from '~/enums/senders.enum';
 
 export default function QuestionSetPage() {
   const params = useParams();
-  const queryResults = trpc.useQueries((t) => {
+
+  const questionSetQueryResults = trpc.useQueries((t) => {
     return [
       t.questionSet.getCompleteQuestionSet(Number(params['questionSetId'])),
       t.question.getConfidenceQuestion({ questionSetId: Number(params['questionSetId']) }),
     ];
   });
 
-  const isLoading = queryResults.some((result) => result.isLoading);
-  const isError = queryResults.some((result) => result.isError);
-  const errors = queryResults.map((result) => result.error);
-  const _questionSet = queryResults[0].data;
-  const _confidenceQuestion = queryResults[1].data;
+  const isLoading = questionSetQueryResults.some((result) => result.isLoading);
+  const isError = questionSetQueryResults.some((result) => result.isError);
+  const errors = questionSetQueryResults.map((result) => result.error);
+  const _questionSet = questionSetQueryResults[0].data;
+  const _confidenceQuestion = questionSetQueryResults[1].data;
 
-  const [questionSet, setQuestionSet] = useState<QuestionSetType | null>();
+  const [questionSet, setQuestionSet] = useState<QuestionSetModel | null>();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const [confidenceQuestion, setConfidenceQuestion] = useState<QuestionType | null>();
+  const [confidenceQuestion, setConfidenceQuestion] = useState<QuestionModel | null>();
   const [confidenceQuestionSubmitted, setConfidenceQuestionSubmitted] = useState(false);
+
+  const [messages, setMessages] = useState<MessageModel[]>([
+    {id: 1, text: 'Hello! What are you struggling with?', senderId: Senders.Tutor, createdAt: new Date(), updatedAt: null},
+  ]);
 
   useEffect(() => {
     if (_questionSet) {
-      setQuestionSet(_questionSet as QuestionSetType);
+      setQuestionSet(_questionSet as QuestionSetModel);
     }
 
     if (_confidenceQuestion) {
-      setConfidenceQuestion(_confidenceQuestion as QuestionType);
+      setConfidenceQuestion(_confidenceQuestion as QuestionModel);
     }
   }, [_questionSet, _confidenceQuestion]);
 
@@ -132,21 +139,25 @@ export default function QuestionSetPage() {
     <div className='flex flex-col gap-10 mt-10'>
       <div className='flex justify-between'>
         <h1 className='text-4xl'>{questionSet?.title}</h1>
-        <Select
-          onValueChange={questionIndex => handleQuestionChanged(currentQuestionIndex, Number(questionIndex))}
-          value={currentQuestionIndex.toString()}>
-          <SelectTrigger className="w-64">
-            <SelectValue placeholder="Select User" />
-          </SelectTrigger>
-          <SelectContent>
-            {questionSet.questions.map((_, index) => (
-              <SelectItem key={index} value={index.toString()}>
-                Question {index + 1}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className='flex gap-4'>
+          <Select
+            onValueChange={questionIndex => handleQuestionChanged(currentQuestionIndex, Number(questionIndex))}
+            value={currentQuestionIndex.toString()}>
+            <SelectTrigger className="w-64">
+              <SelectValue placeholder="Select User" />
+            </SelectTrigger>
+            <SelectContent>
+              {questionSet.questions.map((_, index) => (
+                <SelectItem key={index} value={index.toString()}>
+                  Question {index + 1}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      <HelpComponent messages={messages} setMessages={setMessages} />
 
       {!confidenceQuestionSubmitted ?
         <QuestionComponent question={confidenceQuestion!}

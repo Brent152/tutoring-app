@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { z } from "zod";
-import { AnswerType } from "~/interfaces/answer-type";
-import { QuestionSetType } from "~/interfaces/question-set-type";
-import { QuestionType } from "~/interfaces/question-type";
+import { AnswerModel } from "~/interfaces/answer-model";
+import { QuestionSetModel } from "~/interfaces/question-set-model";
+import { QuestionModel } from "~/interfaces/question-model";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { answers, questionSets, questions } from "~/server/db/schema";
 
@@ -24,19 +24,19 @@ export const questionSetRouter = createTRPCRouter({
 
         let questions = await ctx.db.query.questions.findMany({
             where: (fields) => sql`${fields.questionSetId} = ${questionSet.id}`
-        }) as QuestionType[];
+        }) as QuestionModel[];
 
         questions.forEach(question => question.visits = []);
 
         const questionsWithAnswers = await Promise.all(questions.map(async (question) => {
             const answers = await ctx.db.query.answers.findMany({
                 where: (fields) => sql`${fields.questionId} = ${question.id}`
-            }) as AnswerType[];
+            }) as AnswerModel[];
 
-            return { ...question, answers: answers} as QuestionType;
+            return { ...question, answers: answers} as QuestionModel;
         }));
 
-        const completeQuestionSet = {questions: questionsWithAnswers, ...questionSet, } as QuestionSetType;
+        const completeQuestionSet = {questions: questionsWithAnswers, ...questionSet, } as QuestionSetModel;
         return completeQuestionSet;
     }),
 

@@ -1,10 +1,10 @@
-import { AnswerType } from "./answer-type";
+import { AnswerModel } from "./answer-model";
 
-export interface QuestionType {
+export interface QuestionModel {
     id: number;
     questionSetId: number;
     text: string;
-    answers: AnswerType[];
+    answers: AnswerModel[];
     selectedAnswerId: number | null;
     visits: { startTime: Date, endTime: Date | null }[];
     createdAt: Date;

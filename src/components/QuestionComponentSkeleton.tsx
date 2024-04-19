@@ -1,10 +1,6 @@
 'use client';
 
 import { Card, CardContent, CardHeader } from '~/components/ui/card';
-import { AnswerType } from '~/interfaces/answer-type';
-import { QuestionType } from '~/interfaces/question-type';
-import { Label } from './ui/label';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Skeleton } from './ui/skeleton';
 
 export default function QuestionComponentSkeleton() {

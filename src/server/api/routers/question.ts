@@ -1,9 +1,8 @@
 import { sql } from "drizzle-orm";
 import { z } from "zod";
-import { QuestionType } from "~/interfaces/question-type";
+import { QuestionModel } from "~/interfaces/question-model";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { questions } from "~/server/db/schema";
-import { api } from "~/trpc/server";
 
 export const questionRouter = createTRPCRouter({
     insertQuestion: publicProcedure
@@ -45,6 +44,6 @@ export const questionRouter = createTRPCRouter({
                 ],
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            } as QuestionType;
+            } as QuestionModel;
         }),
 });
