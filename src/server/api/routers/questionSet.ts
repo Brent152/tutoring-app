@@ -1,9 +1,46 @@
+import { sql } from "drizzle-orm";
 import { z } from "zod";
+import { AnswerType } from "~/interfaces/answer-type";
+import { QuestionSetType } from "~/interfaces/question-set-type";
+import { QuestionType } from "~/interfaces/question-type";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { answers, questionSets, questions } from "~/server/db/schema";
 
 export const questionSetRouter = createTRPCRouter({
-    insertEntireQuestionSet: publicProcedure
+    getAll: publicProcedure.query(({ ctx }) => {
+        return ctx.db.query.questionSets.findMany()
+    }),
+
+    getCompleteQuestionSet: publicProcedure
+    .input(z.number())
+    .query(async ({ ctx, input }) => {
+        const questionSet = await ctx.db.query.questionSets.findFirst({
+            where: (fields) => sql`${fields.id} = ${input}`
+        });
+
+        if (!questionSet) {
+            throw new Error("Question set not found");
+        }
+
+        let questions = await ctx.db.query.questions.findMany({
+            where: (fields) => sql`${fields.questionSetId} = ${questionSet.id}`
+        }) as QuestionType[];
+
+        questions.forEach(question => question.visits = []);
+
+        const questionsWithAnswers = await Promise.all(questions.map(async (question) => {
+            const answers = await ctx.db.query.answers.findMany({
+                where: (fields) => sql`${fields.questionId} = ${question.id}`
+            }) as AnswerType[];
+
+            return { ...question, answers: answers} as QuestionType;
+        }));
+
+        const completeQuestionSet = {questions: questionsWithAnswers, ...questionSet, } as QuestionSetType;
+        return completeQuestionSet;
+    }),
+
+    insertCompleteQuestionSet: publicProcedure
         .input(z.object({
             title: z.string(),
             subject: z.string(),
@@ -23,7 +60,7 @@ export const questionSetRouter = createTRPCRouter({
                 title: input.title,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            }).returning({ insertedId: questionSets.id});
+            }).returning({ insertedId: questionSets.id });
 
             const questionSetId = questionSetResult[0]?.insertedId;
             if (!questionSetId) {
@@ -54,7 +91,7 @@ export const questionSetRouter = createTRPCRouter({
                 }
             }
 
-            return { success: true, insertedQuestionSetId: questionSetId};
+            return { success: true, insertedQuestionSetId: questionSetId };
         }),
 
     insertQuestionSetRow: publicProcedure
@@ -70,10 +107,6 @@ export const questionSetRouter = createTRPCRouter({
                 title: input.title,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            }).returning({ insertedId: questionSets.id});
+            }).returning({ insertedId: questionSets.id });
         }),
-
-    getAll: publicProcedure.query(({ ctx }) => {
-        return ctx.db.query.questionSets.findMany()
-    })
 });

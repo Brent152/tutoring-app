@@ -3,12 +3,11 @@
 
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { api } from "~/trpc/react";
+import { trpc } from "~/trpc/react";
 export const dynamic = "force-dynamic"
 
 export default function DatabaseManagement() {
-
-    const insertEntireQuestionSet = api.questionSet.insertEntireQuestionSet.useMutation();
+    const insertEntireQuestionSet = trpc.questionSet.insertCompleteQuestionSet.useMutation();
 
     const insertPythonQuiz = async () => {
         const questionSetResult = await insertEntireQuestionSet.mutateAsync(pythonQuiz);
