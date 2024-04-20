@@ -143,7 +143,8 @@ export default function QuestionSetPage() {
           <Select
             onValueChange={questionIndex => handleQuestionChanged(currentQuestionIndex, Number(questionIndex))}
             value={currentQuestionIndex.toString()}>
-            <SelectTrigger className="max-w-64">
+            <SelectTrigger className="min-w-16 lg:min-w-64">
+              <SelectValue placeholder="Select a question" />
             </SelectTrigger>
             <SelectContent>
               {questionSet.questions.map((_, index) => (
