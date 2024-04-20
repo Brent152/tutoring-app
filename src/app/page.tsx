@@ -35,7 +35,7 @@ export default function HomePage() {
     );
   }
 
-  if (usersQuery.error || questionSetsQuery.error) {
+  if (usersQuery.error ?? questionSetsQuery.error) {
     return <div>Error...</div>;
   }
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import OpenAI from "openai";
-import { ChatCompletionMessage, ChatCompletionSystemMessageParam } from "openai/resources/index.mjs";
+import { type ChatCompletionMessage, ChatCompletionSystemMessageParam } from "openai/resources/index.mjs";
 import { Senders } from "~/enums/senders.enum";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -14,9 +14,9 @@ export const openAIRouter = createTRPCRouter({
             senderId: z.number(),
         })))
         .query(async ({ ctx, input }) => {
-            let messages = input.map((message) => {
+            const messages = input.map((message) => {
                 return {
-                    role: message.senderId === Senders.Tutor ? "assistant" : "user",
+                    role: message.senderId as Senders === Senders.Tutor ? "assistant" : "user",
                     content: message.text,
                 } as ChatCompletionMessage;
             });
@@ -69,7 +69,7 @@ export const openAIRouter = createTRPCRouter({
             // }
 
 
-            let completion = await openai.chat.completions.create({
+            const completion = await openai.chat.completions.create({
                 messages: messages,
                 model: "gpt-3.5-turbo",
             });

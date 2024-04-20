@@ -1,10 +1,10 @@
 'use client';
 
 import { Card, CardContent, CardHeader } from '~/components/ui/card';
-import { AnswerModel } from '~/interfaces/answer-model';
+import { type AnswerModel } from '~/interfaces/answer-model';
 import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { QuestionModel } from '~/interfaces/question-model';
+import { type QuestionModel } from '~/interfaces/question-model';
 
 export default function QuestionComponent(props: {
     question: QuestionModel | undefined,
@@ -22,7 +22,7 @@ export default function QuestionComponent(props: {
                 <hr />
                 <RadioGroup
                     onValueChange={answerId => props.onAnswerChange(props.question!.id, Number(answerId))}
-                    value={props.question!.selectedAnswerId?.toString()}>
+                    value={props.question.selectedAnswerId?.toString()}>
                     {props.question.answers.map((answer: AnswerModel, index) => (
                         <div key={answer.id} className='flex flex-col'>
                             <div className="flex items-center space-x-3 my-4">

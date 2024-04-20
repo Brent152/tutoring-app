@@ -1,15 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Senders } from '~/enums/senders.enum';
+import { type MessageModel } from '~/interfaces/message-model';
 import { trpc } from '~/trpc/react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
-import { Skeleton } from './ui/skeleton';
-import { Textarea } from './ui/textarea';
 import { Input } from './ui/input';
-import { MessageModel } from '~/interfaces/message-model';
-import { Senders } from '~/enums/senders.enum';
+import { Skeleton } from './ui/skeleton';
 
 export default function HelpComponent(props: {
     messages: MessageModel[];
@@ -45,7 +44,7 @@ export default function HelpComponent(props: {
                         <CardContent className='flex flex-col'>
                             {/* Messages */}
                             {props.messages.map((message, index) =>
-                                <Card key={index} className={`text-lg mt-4 p-3 bg-secondary ${message.senderId === Senders.User ? 'ml-auto bg-secondary' : 'mr-auto'}`}>{message.text}</Card>)
+                                <Card key={index} className={`text-lg mt-4 p-3 bg-secondary ${message.senderId as Senders === Senders.User ? 'ml-auto bg-secondary' : 'mr-auto'}`}>{message.text}</Card>)
                             }
 
                             {/* Loading Skeleton */}

@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { z } from "zod";
-import { QuestionModel } from "~/interfaces/question-model";
+import { type QuestionModel } from "~/interfaces/question-model";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { questions } from "~/server/db/schema";
 

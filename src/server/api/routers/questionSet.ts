@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { z } from "zod";
-import { AnswerModel } from "~/interfaces/answer-model";
-import { QuestionSetModel } from "~/interfaces/question-set-model";
-import { QuestionModel } from "~/interfaces/question-model";
+import { type AnswerModel } from "~/interfaces/answer-model";
+import { type QuestionSetModel } from "~/interfaces/question-set-model";
+import { type QuestionModel } from "~/interfaces/question-model";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { answers, questionSets, questions } from "~/server/db/schema";
 
@@ -22,7 +22,7 @@ export const questionSetRouter = createTRPCRouter({
             throw new Error("Question set not found");
         }
 
-        let questions = await ctx.db.query.questions.findMany({
+        const questions = await ctx.db.query.questions.findMany({
             where: (fields) => sql`${fields.questionSetId} = ${questionSet.id}`
         }) as QuestionModel[];
 

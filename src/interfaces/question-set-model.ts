@@ -1,5 +1,5 @@
-import { MessageModel } from "./message-model";
-import { QuestionModel } from "./question-model";
+import { type MessageModel } from "./message-model";
+import { type QuestionModel } from "./question-model";
 
 export interface QuestionSetModel {
     id: number;

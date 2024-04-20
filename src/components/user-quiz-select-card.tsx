@@ -18,7 +18,7 @@ export function UserQuizSelectCard() {
     return <div>Loading...</div>;
   }
 
-  if (usersQuery.error || questionSetsQuery.error) {
+  if (usersQuery.error ?? questionSetsQuery.error) {
     return <div>Error...</div>;
   }
 

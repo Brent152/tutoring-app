@@ -1,4 +1,4 @@
-import { AnswerModel } from "./answer-model";
+import { type AnswerModel } from "./answer-model";
 
 export interface QuestionModel {
     id: number;

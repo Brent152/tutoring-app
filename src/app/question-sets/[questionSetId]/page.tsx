@@ -8,11 +8,11 @@ import QuestionComponentSkeleton from '~/components/QuestionComponentSkeleton';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
-import { QuestionModel } from '~/interfaces/question-model';
-import { QuestionSetModel } from '~/interfaces/question-set-model';
+import { type QuestionModel } from '~/interfaces/question-model';
+import { type QuestionSetModel } from '~/interfaces/question-set-model';
 import { trpc } from '~/trpc/react';
 import QuestionComponent from '../../../components/QuestionComponent';
-import { MessageModel } from '~/interfaces/message-model';
+import { type MessageModel } from '~/interfaces/message-model';
 import { Senders } from '~/enums/senders.enum';
 
 export default function QuestionSetPage() {
@@ -20,8 +20,8 @@ export default function QuestionSetPage() {
 
   const questionSetQueryResults = trpc.useQueries((t) => {
     return [
-      t.questionSet.getCompleteQuestionSet(Number(params['questionSetId'])),
-      t.question.getConfidenceQuestion({ questionSetId: Number(params['questionSetId']) }),
+      t.questionSet.getCompleteQuestionSet(Number(params.questionSetId)),
+      t.question.getConfidenceQuestion({ questionSetId: Number(params.questionSetId) }),
     ];
   });
 
@@ -43,11 +43,11 @@ export default function QuestionSetPage() {
 
   useEffect(() => {
     if (_questionSet) {
-      setQuestionSet(_questionSet as QuestionSetModel);
+      setQuestionSet(_questionSet);
     }
 
     if (_confidenceQuestion) {
-      setConfidenceQuestion(_confidenceQuestion as QuestionModel);
+      setConfidenceQuestion(_confidenceQuestion);
     }
   }, [_questionSet, _confidenceQuestion]);
 
@@ -80,11 +80,11 @@ export default function QuestionSetPage() {
     const currentTime = new Date();
     setQuestionSet((prevQuestionSet) => {
       if (!prevQuestionSet) return null;
-      let newSet = {
+      const newSet = {
         ...prevQuestionSet,
         questions: prevQuestionSet.questions.map((question) => {
           if (question.id === questionId) {
-            let x = {
+            const x = {
               ...question,
               visits: [...question.visits, { startTime: currentTime, endTime: null }],
             };
@@ -160,7 +160,7 @@ export default function QuestionSetPage() {
       <HelpComponent messages={messages} setMessages={setMessages} />
 
       {!confidenceQuestionSubmitted ?
-        <QuestionComponent question={confidenceQuestion!}
+        <QuestionComponent question={confidenceQuestion}
           header={`Confidence Level`}
           onAnswerChange={(_, answerId) => setConfidenceQuestion(prevState => {
             if (!prevState) return null;
@@ -184,7 +184,7 @@ export default function QuestionSetPage() {
         <Button
           className='flex gap-2'
           onClick={confidenceQuestionSubmitted ? () => { handleQuestionChanged(currentQuestionIndex, currentQuestionIndex + 1) } : () => { setConfidenceQuestionSubmitted(true); handleQuestionChanged(null, 0) }}
-          disabled={currentQuestionIndex === questionSet.questions.length - 1 || !confidenceQuestion!.selectedAnswerId}>
+          disabled={currentQuestionIndex === questionSet.questions.length - 1 || !confidenceQuestion.selectedAnswerId}>
           Next <ChevronRightIcon />
         </Button>
       </div>
