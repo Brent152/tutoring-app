@@ -3,15 +3,15 @@
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import HelpComponent from '~/components/HelpComponent';
-import QuestionComponentSkeleton from '~/components/QuestionComponentSkeleton';
+import HelpComponent from '~/components/help-component';
+import QuestionComponentSkeleton from '~/components/question-component-skeleton';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
 import { type QuestionModel } from '~/interfaces/question-model';
 import { type QuestionSetModel } from '~/interfaces/question-set-model';
 import { trpc } from '~/trpc/react';
-import QuestionComponent from '../../../components/QuestionComponent';
+import QuestionComponent from '../../../components/question-component';
 import { type MessageModel } from '~/interfaces/message-model';
 import { Senders } from '~/enums/senders.enum';
 
@@ -37,12 +37,9 @@ export default function QuestionSetPage() {
   const [confidenceQuestion, setConfidenceQuestion] = useState<QuestionModel | null>();
   const [confidenceQuestionSubmitted, setConfidenceQuestionSubmitted] = useState(false);
 
-  const [messages, setMessages] = useState<MessageModel[]>([
-    {id: 1, text: 'Hello! What are you struggling with?', senderId: Senders.Tutor, createdAt: new Date(), updatedAt: null},
-  ]);
-
   useEffect(() => {
     if (_questionSet) {
+      _questionSet.messages = [{ id: 1, text: 'Hello! What are you struggling with?', senderId: Senders.Tutor, createdAt: new Date(), updatedAt: null },];
       setQuestionSet(_questionSet);
     }
 
@@ -63,6 +60,17 @@ export default function QuestionSetPage() {
         <QuestionComponentSkeleton />
       </div>
     )
+  }
+
+
+  function setMessages(messages: MessageModel[]) {
+    setQuestionSet((prevQuestionSet) => {
+      if (!prevQuestionSet) return null;
+      return {
+        ...prevQuestionSet,
+        messages: messages
+      };
+    });
   }
 
   const handleQuestionChanged = (currentQuestionIndex: number | null, newQuestionIndex: number | null) => {
@@ -157,7 +165,7 @@ export default function QuestionSetPage() {
         </div>
       </div>
 
-      <HelpComponent messages={messages} setMessages={setMessages} />
+      <HelpComponent questionSet={questionSet} setMessages={setMessages} />
 
       {!confidenceQuestionSubmitted ?
         <QuestionComponent question={confidenceQuestion}
