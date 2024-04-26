@@ -3,7 +3,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import HelpComponent from '~/components/help-component';
+import TutorChatComponent from '~/components/tutor-chat-component';
 import QuestionComponentSkeleton from '~/components/question-component-skeleton';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
@@ -39,7 +39,7 @@ export default function QuestionSetPage() {
 
   useEffect(() => {
     if (_questionSet) {
-      _questionSet.messages = [{ id: 1, text: 'Hello! What are you struggling with?', senderId: Senders.Tutor, createdAt: new Date(), updatedAt: null },];
+      _questionSet.messages = [{ id: 1, text: `Hi there! I'm here to help you navigate through your quiz.\nIf you need explanations or a little nudge in the right direction, just let me know.`, senderId: Senders.Tutor, createdAt: new Date(), updatedAt: null },];
       setQuestionSet(_questionSet);
     }
 
@@ -94,6 +94,7 @@ export default function QuestionSetPage() {
           if (question.id === questionId) {
             const x = {
               ...question,
+              currentlyViewed: true,
               visits: [...question.visits, { startTime: currentTime, endTime: null }],
             };
             return x
@@ -118,6 +119,7 @@ export default function QuestionSetPage() {
             updatedVisits[updatedVisits.length - 1] = { ...updatedVisits[updatedVisits.length - 1]!, endTime: currentTime };
             return {
               ...question,
+              currentlyViewed: false,
               visits: updatedVisits,
             };
           }
@@ -165,7 +167,7 @@ export default function QuestionSetPage() {
         </div>
       </div>
 
-      <HelpComponent questionSet={questionSet} setMessages={setMessages} />
+      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} /> }
 
       {!confidenceQuestionSubmitted ?
         <QuestionComponent question={confidenceQuestion}
@@ -196,7 +198,7 @@ export default function QuestionSetPage() {
           Next <ChevronRightIcon />
         </Button>
       </div>
-      <Button variant={'secondary'} onClick={() => { console.log(questionSet.questions[currentQuestionIndex]!.visits) }}>Print Question Set</Button>
+      {/* <Button variant={'secondary'} onClick={() => { console.log(questionSet.questions[currentQuestionIndex]!.visits) }}>Print Question Set</Button> */}
     </div >
   );
 }

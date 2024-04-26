@@ -3,118 +3,54 @@
 
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { QuestionSetModel } from "~/interfaces/question-set-model";
 import { trpc } from "~/trpc/react";
-export const dynamic = "force-dynamic"
 
 export default function DatabaseManagement() {
+    const [jsonInput, setJsonInput] = useState('');
+    const [deleteIdInput, setDeleteIdInput] = useState('');
     const insertEntireQuestionSet = trpc.questionSet.insertCompleteQuestionSet.useMutation();
+    const deleteEntireQuestionSet = trpc.questionSet.deleteEntireQuestionSet.useMutation();
 
-    const insertPythonQuiz = async () => {
-        const questionSetResult = await insertEntireQuestionSet.mutateAsync(pythonQuiz);
-        console.log(questionSetResult)
+    const insertQuestionSet = async () => {
+        const questionSet = JSON.parse(jsonInput) as QuestionSetModel;
+        const questionSetResult = await insertEntireQuestionSet.mutateAsync(questionSet);
+        if (questionSetResult.success) {
+            alert("Question set added successfully");
+        } else {
+            alert("Failed to add question set");
+        }
+        // const questionSetResult = await insertEntireQuestionSet.mutateAsync(pythonQuiz);
+    }
+
+    const deleteQuestionSet = async () => {
+        const deleteResult = await deleteEntireQuestionSet.mutateAsync(Number(deleteIdInput));
+        if (deleteResult.success) {
+            alert("Deletion successful (to some extent)");
+        } else {
+            alert("Failed to delete");
+        }
+        // const questionSetResult = await insertEntireQuestionSet.mutateAsync(pythonQuiz);
     }
 
     return (
-        <main className="">
-            <Button disabled onClick={insertPythonQuiz}>Add Python Quiz</Button>
+        <main className="flex flex-col gap-5 mt-5">
+            <h3>Add Question Set</h3>
+            <Textarea
+                placeholder="Enter question set json"
+                onChange={event => setJsonInput(event.target.value)}
+                rows={30}
+            />
+
+            <Button className="w-48 ml-auto" onClick={insertQuestionSet}>Add Question Set</Button>
+
+            <h3>Delete Question Set</h3>
+            <div className="flex gap-5">
+                <Input className="w-32 text-cente" placeholder="Set Id" onChange={event => setDeleteIdInput(event.target.value)}/>
+                <Button className="w-48" onClick={deleteQuestionSet}>Delete Question Set</Button>
+            </div>
         </main>
     );
 }
-
-const pythonQuiz = {
-    title: "Python Fundamentals Challenge",
-    subject: "Python Fundamentals",
-    description: "Welcome to the Python Fundamentals Challenge! This quiz is designed to test your knowledge of Python basics as you transition from other programming languages. Perfect for those who understand general coding concepts but are new to Python's unique syntax and standard libraries. Dive in and see how well you grasp the essentials!",
-    questions: [
-        {
-            text: "What will be the output of the following code: print(type(3.0))?",
-            answers: [
-                { text: "<class 'int'>", correct: false },
-                { text: "<class 'float'>", correct: true },
-                { text: "<class 'string'>", correct: false },
-                { text: "<class 'char'>", correct: false }
-            ]
-        },
-        {
-            text: "Which operator is used for floor division in Python?",
-            answers: [
-                { text: "/", correct: false },
-                { text: "*", correct: false },
-                { text: "//", correct: true },
-                { text: "%", correct: false }
-            ]
-        },
-        {
-            text: "What does the following code return: bool(\"False\")?",
-            answers: [
-                { text: "False", correct: false },
-                { text: "None", correct: false },
-                { text: "True", correct: true },
-                { text: "Error", correct: false }
-            ]
-        },
-        {
-            text: "How can you create a comment in Python?",
-            answers: [
-                { text: "/* comment */", correct: false },
-                { text: "<!-- comment -->", correct: false },
-                { text: "# comment", correct: true },
-                { text: "// comment", correct: false }
-            ]
-        },
-        {
-            text: "What is the correct way to define a function in Python?",
-            answers: [
-                { text: "function myFunc():", correct: false },
-                { text: "def myFunc():", correct: true },
-                { text: "create myFunc():", correct: false },
-                { text: "func myFunc():", correct: false }
-            ]
-        },
-        {
-            text: "Which of the following is a mutable object in Python?",
-            answers: [
-                { text: "(\"tuple\",)", correct: false },
-                { text: "\"string\"", correct: false },
-                { text: "{1, 2, 3}", correct: true },
-                { text: "3.5", correct: false }
-            ]
-        },
-        {
-            text: "How do you create a list in Python that contains the numbers 1 through 5?",
-            answers: [
-                { text: "list = [1, 2, 3, 4, 5]", correct: true },
-                { text: "list = (1, 2, 3, 4, 5)", correct: false },
-                { text: "list = {1, 2, 3, 4, 5}", correct: false },
-                { text: "list = <1, 2, 3, 4, 5>", correct: false }
-            ]
-        },
-        {
-            text: "What is the output of the following code: print(8 == 8.0)?",
-            answers: [
-                { text: "True", correct: true },
-                { text: "False", correct: false },
-                { text: "None", correct: false },
-                { text: "Error", correct: false }
-            ]
-        },
-        {
-            text: "What is used to handle exceptions in Python?",
-            answers: [
-                { text: "handle / except", correct: false },
-                { text: "try / except", correct: true },
-                { text: "try / handle", correct: false },
-                { text: "error / catch", correct: false }
-            ]
-        },
-        {
-            text: "Which module can be imported to work with regular expressions?",
-            answers: [
-                { text: "re", correct: true },
-                { text: "regex", correct: false },
-                { text: "string", correct: false },
-                { text: "text", correct: false }
-            ]
-        }
-    ]
-}     

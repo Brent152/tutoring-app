@@ -1,0 +1,34 @@
+Can you create a quiz in this form:
+
+{
+    "title": "Quiz title",
+    "subject": "Quiz subject",
+    "description": "Basic description of the quiz",
+    "questions": [
+        {
+            "text": "Question Text",
+            "answers": [
+                { "text": "Answer Text", "correct": true/false },
+                { "text": "Answer Text", "correct": true/false },
+                { "text": "Answer Text", "correct": true/false },
+                { "text": "Answer Text", "correct": true/false }
+            ]
+        },
+    ]
+}
+
+Make the quiz have 10 questions
+
+The questions should be loosely sequential. As in, the ability to answer later questions should be supported by the ability to answer earlier questions.
+
+Make the quiz about trigonometry
+
+
+---
+
+Can you explain how the concepts advance? Find any inconsistencies or issues that a student might have connecting the dots
+
+---
+
+can you redo the quiz to fix some of these issues? Note that the quiz does not have to cover a certain amount of material, but rather must simply progress in a way that the student will learn
+

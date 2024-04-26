@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { type AnswerModel } from "~/interfaces/answer-model";
 import { type QuestionSetModel } from "~/interfaces/question-set-model";
@@ -12,33 +12,33 @@ export const questionSetRouter = createTRPCRouter({
     }),
 
     getCompleteQuestionSet: publicProcedure
-    .input(z.number())
-    .query(async ({ ctx, input }) => {
-        const questionSet = await ctx.db.query.questionSets.findFirst({
-            where: (fields) => sql`${fields.id} = ${input}`
-        });
+        .input(z.number())
+        .query(async ({ ctx, input }) => {
+            const questionSet = await ctx.db.query.questionSets.findFirst({
+                where: (fields) => sql`${fields.id} = ${input}`
+            });
 
-        if (!questionSet) {
-            throw new Error("Question set not found");
-        }
+            if (!questionSet) {
+                throw new Error("Question set not found");
+            }
 
-        const questions = await ctx.db.query.questions.findMany({
-            where: (fields) => sql`${fields.questionSetId} = ${questionSet.id}`
-        }) as QuestionModel[];
+            const questions = await ctx.db.query.questions.findMany({
+                where: (fields) => sql`${fields.questionSetId} = ${questionSet.id}`
+            }) as QuestionModel[];
 
-        questions.forEach(question => question.visits = []);
+            questions.forEach(question => question.visits = []);
 
-        const questionsWithAnswers = await Promise.all(questions.map(async (question) => {
-            const answers = await ctx.db.query.answers.findMany({
-                where: (fields) => sql`${fields.questionId} = ${question.id}`
-            }) as AnswerModel[];
+            const questionsWithAnswers = await Promise.all(questions.map(async (question) => {
+                const answers = await ctx.db.query.answers.findMany({
+                    where: (fields) => sql`${fields.questionId} = ${question.id}`
+                }) as AnswerModel[];
 
-            return { ...question, answers: answers} as QuestionModel;
-        }));
+                return { ...question, answers: answers } as QuestionModel;
+            }));
 
-        const completeQuestionSet = {questions: questionsWithAnswers, ...questionSet, } as QuestionSetModel;
-        return completeQuestionSet;
-    }),
+            const completeQuestionSet = { questions: questionsWithAnswers, ...questionSet, } as QuestionSetModel;
+            return completeQuestionSet;
+        }),
 
     insertCompleteQuestionSet: publicProcedure
         .input(z.object({
@@ -92,6 +92,30 @@ export const questionSetRouter = createTRPCRouter({
             }
 
             return { success: true, insertedQuestionSetId: questionSetId };
+        }),
+
+    deleteEntireQuestionSet: publicProcedure
+        .input(z.number())
+        .mutation(async ({ ctx, input }) => {
+            const foundQuestionSet = await ctx.db.query.questionSets.findFirst({
+                where: (fields) => sql`${fields.id} = ${input}`
+            });
+
+            if (!foundQuestionSet) {
+                throw new Error("Question set not found");
+            }
+
+            const foundQuestions = await ctx.db.select({id: questions.id}).from(questions).where(eq(questions.questionSetId, foundQuestionSet.id));
+            await ctx.db.delete(answers)
+            .where(inArray(answers.questionId, foundQuestions.map(question => question.id)));
+
+            await ctx.db.delete(questions)
+            .where(eq(questions.questionSetId, foundQuestionSet.id));      
+
+            await ctx.db.delete(questionSets)
+            .where(eq(questionSets.id, foundQuestionSet.id));      
+
+            return { success: true };
         }),
 
     insertQuestionSetRow: publicProcedure

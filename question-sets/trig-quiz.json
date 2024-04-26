@@ -1,0 +1,97 @@
+{
+    "title": "Trigonometry: From Basics to Practical Applications",
+    "subject": "Trigonometry",
+    "description": "This quiz guides you through a seamless journey in trigonometry, beginning with fundamental definitions and steadily advancing to more sophisticated applications. By the end, you'll have reinforced your understanding of key trigonometric ratios, values, and identities, and learned how to apply these concepts to solve real-world mathematical problems effectively.",
+    "questions": [
+        {
+            "text": "What is the definition of the sine function in a right triangle?",
+            "answers": [
+                { "text": "The ratio of the opposite side to the hypotenuse", "correct": true },
+                { "text": "The ratio of the adjacent side to the hypotenuse", "correct": false },
+                { "text": "The ratio of the opposite side to the adjacent side", "correct": false },
+                { "text": "The ratio of the hypotenuse to the opposite side", "correct": false }
+            ]
+        },
+        {
+            "text": "What is the definition of the cosine function in a right triangle?",
+            "answers": [
+                { "text": "The ratio of the opposite side to the hypotenuse", "correct": false },
+                { "text": "The ratio of the adjacent side to the hypotenuse", "correct": true },
+                { "text": "The ratio of the hypotenuse to the adjacent side", "correct": false },
+                { "text": "The ratio of the adjacent side to the opposite side", "correct": false }
+            ]
+        },
+        {
+            "text": "If the sine of an angle is 0.5, which of the following could be the angle?",
+            "answers": [
+                { "text": "30 degrees", "correct": true },
+                { "text": "45 degrees", "correct": false },
+                { "text": "60 degrees", "correct": false },
+                { "text": "90 degrees", "correct": false }
+            ]
+        },
+        {
+            "text": "Which angle corresponds to a cosine of 0?",
+            "answers": [
+                { "text": "0 degrees", "correct": false },
+                { "text": "90 degrees", "correct": true },
+                { "text": "180 degrees", "correct": false },
+                { "text": "270 degrees", "correct": true }
+            ]
+        },
+        {
+            "text": "What is the value of tan(45 degrees)?",
+            "answers": [
+                { "text": "0", "correct": false },
+                { "text": "1", "correct": true },
+                { "text": "√2", "correct": false },
+                { "text": "1/2", "correct": false }
+            ]
+        },
+        {
+            "text": "What trigonometric function is especially useful for solving equations involving opposite and adjacent sides of a right triangle?",
+            "answers": [
+                { "text": "Sine", "correct": false },
+                { "text": "Cosine", "correct": false },
+                { "text": "Tangent", "correct": true },
+                { "text": "Cotangent", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is an identity involving sine and cosine functions for any angle θ?",
+            "answers": [
+                { "text": "sin²(θ) + cos²(θ) = 1", "correct": true },
+                { "text": "sin(θ) * cos(θ) = 1", "correct": false },
+                { "text": "tan(θ) = sin(θ) / cos(θ)", "correct": false },
+                { "text": "sin(θ) + cos(θ) = 1", "correct": false }
+            ]
+        },
+        {
+            "text": "What is the sine of 90 degrees?",
+            "answers": [
+                { "text": "0", "correct": false },
+                { "text": "1", "correct": true },
+                { "text": "1/2", "correct": false },
+                { "text": "√2/2", "correct": false }
+            ]
+        },
+        {
+            "text": "If cos(θ) = 0.3, what is the most likely value of sin(θ) if θ is in the first quadrant?",
+            "answers": [
+                { "text": "0.9539", "correct": true },
+                { "text": "0.3", "correct": false },
+                { "text": "0.7", "correct": false },
+                { "text": "0.1", "correct": false }
+            ]
+        },
+        {
+            "text": "When given the length of the hypotenuse and one side of a right triangle, which trigonometric function allows you to find the angle?",
+            "answers": [
+                { "text": "Sine", "correct": true },
+                { "text": "Cosine", "correct": false },
+                { "text": "Tangent", "correct": false },
+                { "text": "Secant", "correct": false }
+            ]
+        }
+    ]
+}

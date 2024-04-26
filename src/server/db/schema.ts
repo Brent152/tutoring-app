@@ -87,3 +87,14 @@ export const answersRelations = relations(answers, ({ one }) => ({
   })
 }));
 
+export const messageLogs = pgTable('messageLogs', {
+  id: serial("id").primaryKey(),
+  questionSetId: integer("question_set_id"),
+  text: varchar("text", { length: 10000 }),
+
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at"),
+});
+
