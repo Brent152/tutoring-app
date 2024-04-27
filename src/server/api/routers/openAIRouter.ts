@@ -141,8 +141,8 @@ Assess the relevance of previous misunderstandings or gaps in responses to the c
             // });
 
             const completion = await openai.chat.completions.create({
-                model: "gpt-3.5-turbo",
-                // model: "gpt-4-turbo",
+                // model: "gpt-3.5-turbo",
+                model: "gpt-4-turbo",
                 messages: messagesWithContext,
                 temperature: 1,
                 max_tokens: 256,
