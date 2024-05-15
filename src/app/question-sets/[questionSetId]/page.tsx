@@ -3,18 +3,18 @@
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import TutorChatComponent from '~/components/tutor-chat-component';
 import QuestionComponentSkeleton from '~/components/question-component-skeleton';
+import TutorChatComponent from '~/components/tutor-chat-component';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
+import { useCurrentUser } from '~/contexts/current-user-provider';
+import { Senders } from '~/enums/senders.enum';
+import { type MessageModel } from '~/models/message-model';
 import { type QuestionModel } from '~/models/question-model';
 import { type QuestionSetModel } from '~/models/question-set-model';
 import { trpc } from '~/trpc/react';
 import QuestionComponent from '../../../components/question-component';
-import { type MessageModel } from '~/models/message-model';
-import { Senders } from '~/enums/senders.enum';
-import { useCurrentUser } from '~/contexts/current-user-provider';
 
 export default function QuestionSetPage() {
   const params = useParams();
@@ -154,7 +154,7 @@ export default function QuestionSetPage() {
   async function handleSaveSession(): Promise<void> {
     if (!currentUser) throw new Error('User not found');
     if (!questionSet) throw new Error('Question Set not found');
-    const questionSetResult = await saveNewSession.mutateAsync({ userId: currentUser.id, questionSetId: questionSet.id, currentQuestionId: questionSet.questions[currentQuestionIndex]?.id!, ...questionSet });
+    const questionSetResult = await saveNewSession.mutateAsync({ userId: currentUser.id, questionSetId: questionSet.id, currentQuestionId: questionSet.questions[currentQuestionIndex]?.id ?? -1, ...questionSet });
     console.log(questionSetResult)
   }
 

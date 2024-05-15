@@ -1,22 +1,15 @@
 'use client';
 
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion';
-import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardHeader } from '~/components/ui/card';
-import { Label } from '~/components/ui/label';
+import CardAccordian from '~/components/card-accordion';
+import SavedSession from '~/components/saved-session';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
+import { QuestionModel } from '~/models/question-model';
 import { SessionModel } from '~/models/session-model';
 import { UserModel } from '~/models/user-model';
 import { trpc } from '~/trpc/react';
-import { format } from 'date-fns';
-import CardAccordian from '~/components/card-accordion';
-import { QuestionModel } from '~/models/question-model';
-import Session from '~/components/saved-session';
-import SavedSession from '~/components/saved-session';
 
 export interface BuiltSessionModel extends SessionModel {
   questionSetTitle: string;
@@ -132,7 +125,7 @@ export default function SavedSessionsPage() {
       </div>
 
       <div className='flex flex-col gap-5'>
-        {shownSessions!.map((session) => (
+        {shownSessions.map((session) => (
           <CardAccordian key={session.id}
             title={session.questionSetTitle}
             subTitle={`${session.user.firstName} ${session.user.lastName} - ${format(session.createdAt, 'MM/dd/yyyy HH:mm')}`}>

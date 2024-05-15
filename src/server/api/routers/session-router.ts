@@ -1,10 +1,7 @@
-import { eq, inArray, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
-import { type AnswerModel } from "~/models/answer-model";
-import { type QuestionSetModel } from "~/models/question-set-model";
-import { type QuestionModel } from "~/models/question-model";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { answers, sessions, questionSets, questions, sessionAnswers, sessionMessages } from "~/server/db/schema";
+import { sessionAnswers, sessionMessages, sessions } from "~/server/db/schema";
 
 export const sessionRouter = createTRPCRouter({
 
