@@ -1,0 +1,145 @@
+'use client';
+
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion';
+import { Button } from '~/components/ui/button';
+import { Card, CardContent, CardHeader } from '~/components/ui/card';
+import { Label } from '~/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
+import { Skeleton } from '~/components/ui/skeleton';
+import { SessionModel } from '~/models/session-model';
+import { UserModel } from '~/models/user-model';
+import { trpc } from '~/trpc/react';
+import { format } from 'date-fns';
+import CardAccordian from '~/components/card-accordion';
+import { QuestionModel } from '~/models/question-model';
+import Session from '~/components/saved-session';
+import SavedSession from '~/components/saved-session';
+
+export interface BuiltSessionModel extends SessionModel {
+  questionSetTitle: string;
+  user: UserModel;
+  questions: QuestionModel[];
+}
+
+export default function SavedSessionsPage() {
+  const [selectedUserId, setSelectedUserId] = useState("-1");
+  const [selectedQuestionSetId, setSelectedQuestionSetId] = useState("-1");
+
+  const [allSessions, setAllSessions] = useState<BuiltSessionModel[]>([]);
+  const [shownSessions, setShownSessions] = useState<BuiltSessionModel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const sessionOptionsQuery = trpc.sessionRouter.getSessionOptions.useQuery();
+  const usersQuery = trpc.userRouter.getAll.useQuery();
+  const questionSetsQuery = trpc.questionSetRouter.getAll.useQuery();
+
+  useEffect(() => {
+    if (!(sessionOptionsQuery.isLoading && questionSetsQuery.isLoading && usersQuery.isLoading)) {
+      setIsLoading(false);
+    }
+
+    if (!(sessionOptionsQuery.data && questionSetsQuery.data && usersQuery.data)) return;
+
+    const sessionOptions = sessionOptionsQuery.data;
+    const questionSets = questionSetsQuery.data;
+    const users = usersQuery.data;
+
+    const sessions = sessionOptions.map((sessionOption) => {
+      return {
+        ...sessionOption,
+        questionSetTitle: questionSets.find(x => x.id === sessionOption.questionSetId)?.title,
+        user: users.find(x => x.id === sessionOption.userId),
+      } as BuiltSessionModel;
+    });
+
+    setAllSessions(sessions);
+    setShownSessions(sessions);
+    setIsLoading(false);
+  }, [sessionOptionsQuery.data, questionSetsQuery.data]);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    let filteredSessions = allSessions;
+
+    if (selectedUserId !== "-1") {
+      filteredSessions = filteredSessions.filter(x => x.userId.toString() === selectedUserId);
+    }
+
+    if (selectedQuestionSetId !== "-1") {
+      filteredSessions = filteredSessions.filter(x => x.questionSetId.toString() === selectedQuestionSetId);
+    }
+
+    setShownSessions(filteredSessions);
+  }, [selectedUserId, selectedQuestionSetId, allSessions])
+
+  if (isLoading) {
+    return (
+      <div className='flex flex-col gap-10 mt-10'>
+        <div className="p-5 flex gap-5">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-8 w-64" />
+        </div>
+      </div>
+    );
+  }
+
+  if (sessionOptionsQuery.error ?? questionSetsQuery.error) {
+    return <div>Error...</div>;
+  }
+
+  const users = usersQuery.data;
+  const questionSets = questionSetsQuery.data;
+
+  return (
+    <div className='flex flex-col gap-10 mt-10'>
+      <div className="border rounded-md p-5 flex gap-3">
+
+        <Select
+          onValueChange={value => setSelectedUserId(value)}
+          value={selectedUserId}>
+          <SelectTrigger className="w-64">
+            <SelectValue placeholder="Select User Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={-1} value={"-1"}>{"Any User"}</SelectItem>
+            {users!.map(user => (
+              <SelectItem key={user.id} value={user.id.toString()}>
+                {user.firstName} {user.lastName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select
+          onValueChange={value => setSelectedQuestionSetId(value)}
+          value={selectedQuestionSetId}>
+          <SelectTrigger className="w-64">
+            <SelectValue placeholder="Select Question Set Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={-1} value={"-1"}>{"Any Question Set"}</SelectItem>
+            {questionSets!.map(questionSet => (
+              <SelectItem key={questionSet.id} value={questionSet.id.toString()}>
+                {questionSet.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className='flex flex-col gap-5'>
+        {shownSessions!.map((session) => (
+          <CardAccordian key={session.id}
+            title={session.questionSetTitle}
+            subTitle={`${session.user.firstName} ${session.user.lastName} - ${format(session.createdAt, 'MM/dd/yyyy HH:mm')}`}>
+            <SavedSession session={session} onSessionDelete={() => setAllSessions(prevState => prevState.filter(x => x.id !== session.id))}/>
+          </CardAccordian>
+        ))}
+      </div>
+    </div>
+  );
+}

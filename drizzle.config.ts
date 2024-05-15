@@ -3,10 +3,11 @@ import { type Config } from "drizzle-kit";
 import { env } from "~/env";
 
 export default {
+  dialect: "postgresql",
   schema: "./src/server/db/schema.ts",
-  driver: "pg",
+  out: "./drizzle",
   dbCredentials: {
-    connectionString: env.POSTGRES_URL,
+    url: env.POSTGRES_URL,
   },
   tablesFilter: ["tutoring-app_*"],
 } satisfies Config;

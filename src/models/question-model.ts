@@ -6,6 +6,7 @@ export interface QuestionModel {
     text: string;
     answers: AnswerModel[];
     selectedAnswerId: number | null;
+    correctAnswerId: number | null;
     currentlyViewed: boolean;
     visits: { startTime: Date, endTime: Date | null }[];
     createdAt: Date;

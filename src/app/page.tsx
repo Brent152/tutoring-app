@@ -2,20 +2,20 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { trpc } from "~/trpc/react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Skeleton } from "~/components/ui/skeleton";
+import { useCurrentUser } from "~/contexts/current-user-provider";
+import { trpc } from "~/trpc/react";
 
 export default function HomePage() {
 
-  const [currentUser, setCurrentUser] = useState(null);
-  const [currentQuestionSet, setCurrentQuestionSet] = useState(null);
+  const { currentUser, setCurrentUser } = useCurrentUser();
 
   const router = useRouter();
-  const usersQuery = trpc.user.getAll.useQuery();
-  const questionSetsQuery = trpc.questionSet.getAll.useQuery();
+  const usersQuery = trpc.userRouter.getAll.useQuery();
+  const questionSetsQuery = trpc.questionSetRouter.getAll.useQuery();
 
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedQuestionSetId, setSelectedQuestionSetId] = useState('');
@@ -78,7 +78,10 @@ export default function HomePage() {
           <Button
             className="w-32 ml-auto"
             disabled={!selectedUserId || !selectedQuestionSetId}
-            onClick={() => router.push(`/question-sets/${selectedQuestionSetId}`)}>
+            onClick={() => {
+              setCurrentUser(users!.find(user => user.id === parseInt(selectedUserId)) ?? null);
+              router.push(`/question-sets/${selectedQuestionSetId}`)
+            }}>
             Start Quiz
           </Button>
         </CardContent>

@@ -5,14 +5,14 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { QuestionSetModel } from "~/interfaces/question-set-model";
+import { QuestionSetModel } from "~/models/question-set-model";
 import { trpc } from "~/trpc/react";
 
 export default function DatabaseManagement() {
     const [jsonInput, setJsonInput] = useState('');
     const [deleteIdInput, setDeleteIdInput] = useState('');
-    const insertEntireQuestionSet = trpc.questionSet.insertCompleteQuestionSet.useMutation();
-    const deleteEntireQuestionSet = trpc.questionSet.deleteEntireQuestionSet.useMutation();
+    const insertEntireQuestionSet = trpc.questionSetRouter.insertCompleteQuestionSet.useMutation();
+    const deleteEntireQuestionSet = trpc.questionSetRouter.deleteEntireQuestionSet.useMutation();
 
     const insertQuestionSet = async () => {
         const questionSet = JSON.parse(jsonInput) as QuestionSetModel;

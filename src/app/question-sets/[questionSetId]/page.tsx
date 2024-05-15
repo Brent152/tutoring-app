@@ -8,42 +8,49 @@ import QuestionComponentSkeleton from '~/components/question-component-skeleton'
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
-import { type QuestionModel } from '~/interfaces/question-model';
-import { type QuestionSetModel } from '~/interfaces/question-set-model';
+import { type QuestionModel } from '~/models/question-model';
+import { type QuestionSetModel } from '~/models/question-set-model';
 import { trpc } from '~/trpc/react';
 import QuestionComponent from '../../../components/question-component';
-import { type MessageModel } from '~/interfaces/message-model';
+import { type MessageModel } from '~/models/message-model';
 import { Senders } from '~/enums/senders.enum';
+import { useCurrentUser } from '~/contexts/current-user-provider';
 
 export default function QuestionSetPage() {
   const params = useParams();
-
   const questionSetQueryResults = trpc.useQueries((t) => {
     return [
-      t.questionSet.getCompleteQuestionSet(Number(params.questionSetId)),
-      t.question.getConfidenceQuestion({ questionSetId: Number(params.questionSetId) }),
+      t.questionSetRouter.getCompleteQuestionSet(Number(params.questionSetId)),
+      t.questionRouter.getConfidenceQuestion({ questionSetId: Number(params.questionSetId) }),
     ];
   });
 
   const isLoading = questionSetQueryResults.some((result) => result.isLoading);
   const isError = questionSetQueryResults.some((result) => result.isError);
   const errors = questionSetQueryResults.map((result) => result.error);
+
   const _questionSet = questionSetQueryResults[0].data;
   const _confidenceQuestion = questionSetQueryResults[1].data;
+  const saveNewSession = trpc.sessionRouter.saveNewSession.useMutation();
+
+  const { currentUser, setCurrentUser } = useCurrentUser();
 
   const [questionSet, setQuestionSet] = useState<QuestionSetModel | null>();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const [confidenceQuestion, setConfidenceQuestion] = useState<QuestionModel | null>();
-  const [confidenceQuestionSubmitted, setConfidenceQuestionSubmitted] = useState(false);
+  // Temporarily remove confidence question
+  const [confidenceQuestionSubmitted, setConfidenceQuestionSubmitted] = useState(true);
 
   useEffect(() => {
     if (_questionSet) {
-      _questionSet.messages = [{ id: 1, text: `Hi there! I'm here to help you navigate through your quiz.\nIf you need explanations or a little nudge in the right direction, just let me know.`, senderId: Senders.Tutor, createdAt: new Date(), updatedAt: null },];
+      _questionSet.messages = [{ id: 1, text: `Hi there! I'm here to help you navigate through your quiz.\nIf you need explanations or a little nudge in the right direction, just let me know.`, senderTypeId: Senders.Tutor, createdAt: new Date(), updatedAt: null },];
       setQuestionSet(_questionSet);
     }
 
     if (_confidenceQuestion) {
+      // Temporarily remove confidence question
+      _confidenceQuestion.selectedAnswerId = 1;
       setConfidenceQuestion(_confidenceQuestion);
     }
   }, [_questionSet, _confidenceQuestion]);
@@ -61,7 +68,6 @@ export default function QuestionSetPage() {
       </div>
     )
   }
-
 
   function setMessages(messages: MessageModel[]) {
     setQuestionSet((prevQuestionSet) => {
@@ -145,11 +151,19 @@ export default function QuestionSetPage() {
       });
   }
 
+  async function handleSaveSession(): Promise<void> {
+    if (!currentUser) throw new Error('User not found');
+    if (!questionSet) throw new Error('Question Set not found');
+    const questionSetResult = await saveNewSession.mutateAsync({ userId: currentUser.id, questionSetId: questionSet.id, currentQuestionId: questionSet.questions[currentQuestionIndex]?.id!, ...questionSet });
+    console.log(questionSetResult)
+  }
+
   return (
     <div className='flex flex-col gap-10 mt-10'>
       <div className='flex justify-between'>
         <h1 className='text-4xl'>{questionSet?.title}</h1>
-        <div className='flex gap-4'>
+        <div className='flex gap-4 items-center'>
+          <Button variant='outline' onClick={handleSaveSession}>Save Session</Button>
           <Select
             onValueChange={questionIndex => handleQuestionChanged(currentQuestionIndex, Number(questionIndex))}
             value={currentQuestionIndex.toString()}>
@@ -167,7 +181,7 @@ export default function QuestionSetPage() {
         </div>
       </div>
 
-      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} /> }
+      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} />}
 
       {!confidenceQuestionSubmitted ?
         <QuestionComponent question={confidenceQuestion}

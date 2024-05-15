@@ -8,8 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 
 export function UserQuizSelectCard() {
   const router = useRouter();
-  const usersQuery = trpc.user.getAll.useQuery();
-  const questionSetsQuery = trpc.questionSet.getAll.useQuery();
+  const usersQuery = trpc.userRouter.getAll.useQuery();
+  const questionSetsQuery = trpc.questionSetRouter.getAll.useQuery();
 
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedQuestionSetId, setSelectedQuestionSetId] = useState('');

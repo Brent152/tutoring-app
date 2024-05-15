@@ -1,9 +1,10 @@
 import { userRouter } from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
-import { answerRouter } from "./routers/answer";
-import { questionRouter } from "./routers/question";
-import { questionSetRouter } from "./routers/questionSet";
-import { openAIRouter } from "./routers/openAIRouter";
+import { answerRouter } from "./routers/answer-router";
+import { questionRouter } from "./routers/question-router";
+import { questionSetRouter } from "./routers/question-set-router";
+import { openAIRouter } from "./routers/open-ai-router";
+import { sessionRouter } from "./routers/session-router";
 
 /**
  * This is the primary router for your server.
@@ -11,11 +12,12 @@ import { openAIRouter } from "./routers/openAIRouter";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  user: userRouter,
-  questionSet: questionSetRouter,
-  question: questionRouter,
-  answer: answerRouter,
+  userRouter: userRouter,
+  questionSetRouter: questionSetRouter,
+  questionRouter: questionRouter,
+  answerRouter: answerRouter,
   openAIRouter: openAIRouter,
+  sessionRouter: sessionRouter,
 });
 
 // export type definition of API

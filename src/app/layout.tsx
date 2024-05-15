@@ -8,6 +8,7 @@ import { cn } from "~/lib/utils";
 import "~/styles/globals.css";
 import { Toaster } from "~/components/ui/sonner";
 import { captureRejectionSymbol } from "events";
+import { CurrentUserProvider } from "~/contexts/current-user-provider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -36,9 +37,11 @@ export default async function RootLayout({
           <TopNav />
           <Toaster />
           <TRPCReactProvider>
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              {children}
-            </div>
+            <CurrentUserProvider>
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                {children}
+              </div>
+            </CurrentUserProvider>
           </TRPCReactProvider>
         </ThemeProvider>
       </body>

@@ -1,10 +1,10 @@
 'use client';
 
 import { Card, CardContent, CardHeader } from '~/components/ui/card';
-import { type AnswerModel } from '~/interfaces/answer-model';
+import { type AnswerModel } from '~/models/answer-model';
 import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { type QuestionModel } from '~/interfaces/question-model';
+import { type QuestionModel } from '~/models/question-model';
 
 export default function QuestionComponent(props: {
     question: QuestionModel | undefined,
