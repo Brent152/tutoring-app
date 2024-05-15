@@ -1,16 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Senders } from '~/enums/senders.enum';
 import { type MessageModel } from '~/models/message-model';
 import { QuestionSetModel } from '~/models/question-set-model';
 import { trpc } from '~/trpc/react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import CardAccordian from './card-accordion';
 import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
+import { Card } from './ui/card';
 import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
-import CardAccordian from './card-accordion';
 
 export default function TutorChatComponent(props: {
     questionSet: QuestionSetModel,
@@ -43,13 +43,17 @@ export default function TutorChatComponent(props: {
         <CardAccordian title="Tutor Chat">
             <div className='flex flex-col'>
                 {/* Messages */}
-                {props.questionSet.messages.map((message, index) =>
-                    <Card key={index}
-                        className={`text-lg whitespace-pre-wrap mt-4 p-3  ${message.senderTypeId as Senders === Senders.User ? 'ml-auto' : 'mr-auto bg-secondary'}`}
-                    >
-                        {message.text}
-                    </Card>)
-                }
+                <div className='flex flex-col h-auto lg:max-h-[60vh] overflow-y-scroll'>
+                    {props.questionSet.messages.map((message, index) =>
+                        <Card key={index}
+                            className={`text-lg whitespace-pre-wrap mt-4 p-3  ${message.senderTypeId as Senders === Senders.User ? 'ml-auto' : 'mr-auto bg-secondary'}`}
+                        >
+                            <ReactMarkdown>
+                                {message.text}
+                            </ReactMarkdown>
+                        </Card>)
+                    }
+                </div>
 
                 {/* Loading Skeleton */}
                 {sendMessageMutation.isPending ?
