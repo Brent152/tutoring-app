@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Senders } from '~/enums/senders.enum';
 import { type MessageModel } from '~/models/message-model';
 import { QuestionSetModel } from '~/models/question-set-model';
 import { trpc } from '~/trpc/react';
+import CardAccordion from './card-accordion';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
-import CardAccordion from './card-accordion';
 
 export default function TutorChatComponent(props: {
     questionSet: QuestionSetModel,

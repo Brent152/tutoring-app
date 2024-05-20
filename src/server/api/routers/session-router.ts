@@ -1,12 +1,10 @@
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { answers, questions, sessionAnswers, sessionMessages, sessions } from "~/server/db/schema";
-import { questionRouter } from "./question-router";
 import { CompletedSessionModel } from "~/models/completed-session-model";
-import { SessionModel } from "~/models/session-model";
 import { QuestionModel } from "~/models/question-model";
 import { SessionMessageModel } from "~/models/session-message-model";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { answers, questions, sessionAnswers, sessionMessages, sessions } from "~/server/db/schema";
 
 export const sessionRouter = createTRPCRouter({
 

@@ -1,17 +1,13 @@
-import { trpc } from "~/trpc/react";
-import { Skeleton } from "./ui/skeleton";
-import { useEffect, useState } from "react";
-import { QuestionModel } from "~/models/question-model";
 import { TrashIcon } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { Button } from "./ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
-import { CompletedSessionModel } from "~/models/completed-session-model";
-import MessagesComponent from "./messages-component";
-import { Card } from "./ui/card";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Senders } from "~/enums/senders.enum";
+import { CompletedSessionModel } from "~/models/completed-session-model";
+import { QuestionModel } from "~/models/question-model";
+import { trpc } from "~/trpc/react";
 import CardAccordion from "./card-accordion";
+import { Card } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 
 export default function SavedSession(props: { session: CompletedSessionModel, onSessionDelete: () => void }) {
@@ -22,7 +18,7 @@ export default function SavedSession(props: { session: CompletedSessionModel, on
 
     useEffect(() => {
         if (!sessionQuery.data) return;
-        setSession(sessionQuery.data as CompletedSessionModel);
+        setSession(sessionQuery.data);
         console.log(sessionQuery);
     }, [sessionQuery.data]);
 

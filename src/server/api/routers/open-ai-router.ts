@@ -1,10 +1,10 @@
+import fs from 'fs';
 import OpenAI from "openai";
 import { ChatCompletionMessageParam, ChatCompletionSystemMessageParam, type ChatCompletionMessage } from "openai/resources/index.mjs";
+import path from 'path';
 import { z } from "zod";
 import { Senders } from "~/enums/senders.enum";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import fs from 'fs';
-import path from 'path';
 
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
