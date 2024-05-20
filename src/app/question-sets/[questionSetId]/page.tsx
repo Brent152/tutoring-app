@@ -107,7 +107,7 @@ export default function QuestionSetPage() {
       _questionSet.messages = [{
         id: 1,
         text: `Hi there! I'm here to help if you have any questions.\nIf you need explanations or a little nudge in the right direction, just let me know.`,
-        currentQuestionId: questionSet?.questions[0]!.id || -1,
+        currentQuestionId: questionSet?.questions[0]!.id ?? -1,
         senderTypeId: Senders.Tutor,
         createdAt: new Date(),
         updatedAt: null
@@ -194,7 +194,7 @@ export default function QuestionSetPage() {
         </div>
       </div>
 
-      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} currentQuestionId={questionSet.questions[currentQuestionIndex]?.id || -1} />}
+      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} currentQuestionId={questionSet.questions[currentQuestionIndex]?.id ?? -1} />}
 
       {!confidenceQuestionSubmitted ?
         <QuestionComponent question={confidenceQuestion}
