@@ -1,10 +1,6 @@
-export interface MessageModel {
-    id: number;
+import { MessageModel } from "./message-model";
+
+export interface SessionMessageModel extends MessageModel {
     userId: number;
     questionSetSessionId: number;
-    currentQuestionId: number;
-    text: string;
-    senderTypeId: number;
-    createdAt: Date;
-    updatedAt: Date | null;
 }

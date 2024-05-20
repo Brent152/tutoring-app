@@ -44,7 +44,15 @@ export default function QuestionSetPage() {
 
   useEffect(() => {
     if (_questionSet) {
-      _questionSet.messages = [{ id: 1, text: `Hi there! I'm here to help you navigate through your quiz.\nIf you need explanations or a little nudge in the right direction, just let me know.`, senderTypeId: Senders.Tutor, createdAt: new Date(), updatedAt: null },];
+      _questionSet.messages = [{
+        id: 1,
+        text: `Hi there! I'm here to help you navigate through your quiz.\nIf you need explanations or a little nudge in the right direction, just let me know.`,
+        currentQuestionId: questionSet?.questions[0]!.id || -1,
+        senderTypeId: Senders.Tutor,
+        createdAt: new Date(),
+        updatedAt: null
+      }
+    ];
       setQuestionSet(_questionSet);
     }
 
@@ -154,7 +162,7 @@ export default function QuestionSetPage() {
   async function handleSaveSession(): Promise<void> {
     if (!currentUser) throw new Error('User not found');
     if (!questionSet) throw new Error('Question Set not found');
-    const questionSetResult = await saveNewSession.mutateAsync({ userId: currentUser.id, questionSetId: questionSet.id, currentQuestionId: questionSet.questions[currentQuestionIndex]?.id ?? -1, ...questionSet });
+    const questionSetResult = await saveNewSession.mutateAsync({ userId: currentUser.id, questionSetId: questionSet.id, ...questionSet });
     console.log(questionSetResult)
   }
 
@@ -181,7 +189,7 @@ export default function QuestionSetPage() {
         </div>
       </div>
 
-      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} />}
+      {confidenceQuestionSubmitted && <TutorChatComponent questionSet={questionSet} setMessages={setMessages} currentQuestionId={questionSet.questions[currentQuestionIndex]?.id || -1} />}
 
       {!confidenceQuestionSubmitted ?
         <QuestionComponent question={confidenceQuestion}

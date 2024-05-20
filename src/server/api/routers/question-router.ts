@@ -23,25 +23,6 @@ export const questionRouter = createTRPCRouter({
         return ctx.db.query.questions.findMany();
     }),
 
-    getCompletedQuestions: publicProcedure
-    .input(z.object({sessionId: z.number(), questionSetId: z.number()}))
-    .query(async ({ ctx, input }) => {
-        return await ctx.db
-        .select({
-            id: questions.id,
-            questionSetId: questions.questionSetId,
-            text: questions.text,
-            createdAt: questions.createdAt,
-            updatedAt: questions.updatedAt,
-            correctAnswerId: answers.id,
-            selectedAnswerId: sessionAnswers.selectedAnswerId,
-        })
-        .from(questions)
-        .leftJoin(answers, eq(answers.questionId, questions.id))
-        .innerJoin(sessionAnswers, and(eq(sessionAnswers.sessionId, input.sessionId), eq(sessionAnswers.questionId, questions.id)))
-        .where((fields) => and(eq(fields.questionSetId, input.questionSetId), answers.correct));
-    }),
-
     getConfidenceQuestion: publicProcedure
         .input(z.object({
             questionSetId: z.number(),

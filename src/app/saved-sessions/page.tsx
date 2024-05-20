@@ -2,27 +2,22 @@
 
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import CardAccordian from '~/components/card-accordion';
+import CardAccordion from '~/components/card-accordion';
 import SavedSession from '~/components/saved-session';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Skeleton } from '~/components/ui/skeleton';
+import { CompletedSessionModel } from '~/models/completed-session-model';
 import { QuestionModel } from '~/models/question-model';
 import { SessionModel } from '~/models/session-model';
 import { UserModel } from '~/models/user-model';
 import { trpc } from '~/trpc/react';
 
-export interface BuiltSessionModel extends SessionModel {
-  questionSetTitle: string;
-  user: UserModel;
-  questions: QuestionModel[];
-}
-
 export default function SavedSessionsPage() {
   const [selectedUserId, setSelectedUserId] = useState("-1");
   const [selectedQuestionSetId, setSelectedQuestionSetId] = useState("-1");
 
-  const [allSessions, setAllSessions] = useState<BuiltSessionModel[]>([]);
-  const [shownSessions, setShownSessions] = useState<BuiltSessionModel[]>([]);
+  const [allSessions, setAllSessions] = useState<CompletedSessionModel[]>([]);
+  const [shownSessions, setShownSessions] = useState<CompletedSessionModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const sessionOptionsQuery = trpc.sessionRouter.getSessionOptions.useQuery();
@@ -45,7 +40,7 @@ export default function SavedSessionsPage() {
         ...sessionOption,
         questionSetTitle: questionSets.find(x => x.id === sessionOption.questionSetId)?.title,
         user: users.find(x => x.id === sessionOption.userId),
-      } as BuiltSessionModel;
+      } as CompletedSessionModel;
     });
 
     setAllSessions(sessions);
@@ -126,11 +121,13 @@ export default function SavedSessionsPage() {
 
       <div className='flex flex-col gap-5'>
         {shownSessions.map((session) => (
-          <CardAccordian key={session.id}
+          <CardAccordion
+            key={session.id}
             title={session.questionSetTitle}
-            subTitle={`${session.user.firstName} ${session.user.lastName} - ${format(session.createdAt, 'MM/dd/yyyy HH:mm')}`}>
-            <SavedSession session={session} onSessionDelete={() => setAllSessions(prevState => prevState.filter(x => x.id !== session.id))}/>
-          </CardAccordian>
+            subTitle={`${session.user.firstName} ${session.user.lastName} - ${format(session.createdAt, 'MM/dd/yyyy HH:mm')}`}
+            itemValue={session.id.toString()}>
+            <SavedSession session={session} onSessionDelete={() => setAllSessions(prevState => prevState.filter(x => x.id !== session.id))} />
+          </CardAccordion>
         ))}
       </div>
     </div>
