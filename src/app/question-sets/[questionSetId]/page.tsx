@@ -42,50 +42,9 @@ export default function QuestionSetPage() {
   // Temporarily remove confidence question
   const [confidenceQuestionSubmitted, setConfidenceQuestionSubmitted] = useState(true);
 
-  useEffect(() => {
-    if (_questionSet) {
-      _questionSet.messages = [{
-        id: 1,
-        text: `Hi there! I'm here to help you navigate through your quiz.\nIf you need explanations or a little nudge in the right direction, just let me know.`,
-        currentQuestionId: questionSet?.questions[0]!.id || -1,
-        senderTypeId: Senders.Tutor,
-        createdAt: new Date(),
-        updatedAt: null
-      }
-    ];
-      setQuestionSet(_questionSet);
-    }
-
-    if (_confidenceQuestion) {
-      // Temporarily remove confidence question
-      _confidenceQuestion.selectedAnswerId = 1;
-      setConfidenceQuestion(_confidenceQuestion);
-    }
-  }, [_questionSet, _confidenceQuestion]);
-
-  if (isError) {
-    console.error(errors);
-    return <div>Error loading question set</div>;
-  }
-
-  if (isLoading || !questionSet || !confidenceQuestion) {
-    return (
-      <div className='flex flex-col gap-10 mt-10'>
-        <h1 className='text-4xl'><Skeleton className='h-10 w-1/2' /></h1>
-        <QuestionComponentSkeleton />
-      </div>
-    )
-  }
-
-  function setMessages(messages: MessageModel[]) {
-    setQuestionSet((prevQuestionSet) => {
-      if (!prevQuestionSet) return null;
-      return {
-        ...prevQuestionSet,
-        messages: messages
-      };
-    });
-  }
+  // useEffect(() => {
+  //   console.log(questionSet?.questions.find(x => x.isCurrentlyViewed === true));
+  // }, [currentQuestionIndex, questionSet]); // This will run every time `currentQuestionIndex` or `questionSet` changes
 
   const handleQuestionChanged = (currentQuestionIndex: number | null, newQuestionIndex: number | null) => {
     if (!questionSet) return null;
@@ -108,7 +67,7 @@ export default function QuestionSetPage() {
           if (question.id === questionId) {
             const x = {
               ...question,
-              currentlyViewed: true,
+              isCurrentlyViewed: true,
               visits: [...question.visits, { startTime: currentTime, endTime: null }],
             };
             return x
@@ -133,12 +92,58 @@ export default function QuestionSetPage() {
             updatedVisits[updatedVisits.length - 1] = { ...updatedVisits[updatedVisits.length - 1]!, endTime: currentTime };
             return {
               ...question,
-              currentlyViewed: false,
+              isCurrentlyViewed: false,
               visits: updatedVisits,
-            };
+            } as QuestionModel;
           }
           return question;
         }),
+      };
+    });
+  }
+
+  useEffect(() => {
+    if (_questionSet) {
+      _questionSet.messages = [{
+        id: 1,
+        text: `Hi there! I'm here to help if you have any questions.\nIf you need explanations or a little nudge in the right direction, just let me know.`,
+        currentQuestionId: questionSet?.questions[0]!.id || -1,
+        senderTypeId: Senders.Tutor,
+        createdAt: new Date(),
+        updatedAt: null
+      }
+      ];
+      setQuestionSet(_questionSet);
+    }
+
+    if (_confidenceQuestion) {
+      // Temporarily remove confidence question
+      _confidenceQuestion.selectedAnswerId = 1;
+      setConfidenceQuestion(_confidenceQuestion);
+      handleQuestionChanged(null, 0);
+    }
+  }, [_questionSet, _confidenceQuestion]);
+
+  if (isError) {
+    console.error(errors);
+    return <div>Error loading question set</div>;
+  }
+
+  if (isLoading || !questionSet || !confidenceQuestion) {
+    return (
+      <div className='flex flex-col gap-10 mt-10'>
+        <h1 className='text-4xl'><Skeleton className='h-10 w-1/2' /></h1>
+        <QuestionComponentSkeleton />
+      </div>
+    )
+  }
+
+  function setMessages(messages: MessageModel[]) {
+    setQuestionSet((prevQuestionSet) => {
+      if (!prevQuestionSet) return null;
+      return {
+        ...prevQuestionSet,
+        messages: messages
       };
     });
   }

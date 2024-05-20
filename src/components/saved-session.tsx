@@ -69,7 +69,7 @@ export default function SavedSession(props: { session: CompletedSessionModel, on
 
     return (
         <div className="flex flex-col gap-5">
-            <CardAccordion itemValue="questions-accordion" title="Questions" size="medium">
+            <CardAccordion itemValue="questions-accordion" title="Questions" size="medium" expanded={true}>
             <div className="flex flex-col gap-2">
                             {session.questions?.map((question, index) =>
                                 <div key={index} className={`border rounded p-2 text-base ${getQuestionColorClass(question)}`}>{index + 1}: {question.text}</div>

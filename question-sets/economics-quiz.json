@@ -1,0 +1,97 @@
+{
+    "title": "Basic Economics Quiz",
+    "subject": "Economics",
+    "description": "This quiz covers fundamental concepts in basic economics. It will test your understanding of key principles and theories.",
+    "questions": [
+        {
+            "text": "What is the definition of economics?",
+            "answers": [
+                { "text": "The study of money and its uses", "correct": false },
+                { "text": "The study of how people choose to use resources", "correct": true },
+                { "text": "The study of politics and government", "correct": false },
+                { "text": "The study of human behavior", "correct": false }
+            ]
+        },
+        {
+            "text": "What is meant by 'opportunity cost'?",
+            "answers": [
+                { "text": "The money spent on a choice", "correct": false },
+                { "text": "The benefit of the next best alternative foregone", "correct": true },
+                { "text": "The time spent on a decision", "correct": false },
+                { "text": "The cost of an opportunity", "correct": false }
+            ]
+        },
+        {
+            "text": "Which term describes the additional satisfaction or utility that a person receives from consuming an additional unit of a good or service?",
+            "answers": [
+                { "text": "Marginal utility", "correct": true },
+                { "text": "Total utility", "correct": false },
+                { "text": "Average utility", "correct": false },
+                { "text": "Consumer surplus", "correct": false }
+            ]
+        },
+        {
+            "text": "What is the law of demand?",
+            "answers": [
+                { "text": "As the price of a good rises, the quantity demanded will increase", "correct": false },
+                { "text": "As the price of a good rises, the quantity demanded will decrease", "correct": true },
+                { "text": "The higher the demand, the higher the price", "correct": false },
+                { "text": "Demand is constant regardless of price", "correct": false }
+            ]
+        },
+        {
+            "text": "What does 'elasticity of demand' refer to?",
+            "answers": [
+                { "text": "How demand changes with consumer preferences", "correct": false },
+                { "text": "How demand responds to changes in price", "correct": true },
+                { "text": "How demand affects supply", "correct": false },
+                { "text": "How much demand there is in the market", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is a characteristic of a perfectly competitive market?",
+            "answers": [
+                { "text": "There are many buyers and sellers", "correct": true },
+                { "text": "There are barriers to entry", "correct": false },
+                { "text": "Products are differentiated", "correct": false },
+                { "text": "Firms have control over prices", "correct": false }
+            ]
+        },
+        {
+            "text": "What is meant by 'monopoly' in economics?",
+            "answers": [
+                { "text": "A market with many firms selling similar products", "correct": false },
+                { "text": "A market where a single firm controls the entire market", "correct": true },
+                { "text": "A market with a few firms dominating the market", "correct": false },
+                { "text": "A market with numerous small firms", "correct": false }
+            ]
+        },
+        {
+            "text": "What is 'Gross Domestic Product (GDP)'?",
+            "answers": [
+                { "text": "The total value of all goods and services produced within a country", "correct": true },
+                { "text": "The total value of all exports and imports of a country", "correct": false },
+                { "text": "The total income of all citizens of a country", "correct": false },
+                { "text": "The total value of all investments made within a country", "correct": false }
+            ]
+        },
+        {
+            "text": "What is 'inflation'?",
+            "answers": [
+                { "text": "A general increase in prices and fall in the purchasing value of money", "correct": true },
+                { "text": "A general decrease in prices and increase in the value of money", "correct": false },
+                { "text": "An increase in the supply of goods", "correct": false },
+                { "text": "An increase in consumer spending", "correct": false }
+            ]
+        },
+        {
+            "text": "What is 'fiscal policy'?",
+            "answers": [
+                { "text": "The use of government spending and taxation to influence the economy", "correct": true },
+                { "text": "The control of the money supply to influence the economy", "correct": false },
+                { "text": "The regulation of prices and wages by the government", "correct": false },
+                { "text": "The policy of borrowing money to finance government projects", "correct": false }
+            ]
+        }
+    ]
+}

@@ -6,6 +6,7 @@ interface CardAccordionProps {
     children?: React.ReactNode;
     itemValue: string;
     size?: 'small' | 'medium' | 'large';
+    expanded?: boolean;
 }
 
 export default function CardAccordion(props: CardAccordionProps) {
@@ -24,7 +25,7 @@ export default function CardAccordion(props: CardAccordionProps) {
  }
 
   return (
-        <Accordion type="single" collapsible className="w-full border rounded-md px-3">
+        <Accordion type="single" collapsible className="w-full border rounded-md px-3" defaultValue={props.expanded ? props.itemValue : ''}>
         <AccordionItem value={props.itemValue} style={{border: 'none'}}>
           <AccordionTrigger className='transition-all hover:px-2'>
             <div className="flex justify-between items-center w-full mr-4 px-2">

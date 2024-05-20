@@ -3,6 +3,9 @@ import { ChatCompletionMessageParam, ChatCompletionSystemMessageParam, type Chat
 import { z } from "zod";
 import { Senders } from "~/enums/senders.enum";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import fs from 'fs';
+import path from 'path';
+
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -16,7 +19,7 @@ export const openAIRouter = createTRPCRouter({
             questions: z.array(z.object({
                 text: z.string(),
                 selectedAnswerId: z.number().nullable().optional(),
-                currentlyViewed: z.boolean().optional(),
+                isCurrentlyViewed: z.boolean().optional(),
                 answers: z.array(z.object({
                     id: z.number(),
                     text: z.string(),
@@ -37,17 +40,10 @@ export const openAIRouter = createTRPCRouter({
                 } as ChatCompletionMessage;
             });
 
+            const promptsPath = path.join(process.cwd(), 'src/prompts');
             const startContextMessage: ChatCompletionSystemMessageParam = {
                 role: "system",
-                content: `                        
-You are a tutoring assistant. A student is taking a quiz and will interact with you in various ways.
-
-Key responsibilities:
-- Understand and respond to the student's mental state and confusion.
-- Encourage critical thinking and guide the student towards understanding.
-- Use context from past interactions to enhance explanations.
-- Prioritize correcting fundamental misunderstandings before addressing more complex ideas.
-`
+                content: fs.readFileSync(path.join(promptsPath, 'startContextMessage.txt'), 'utf8')
             };
 
             const repeatedContextMessage: ChatCompletionSystemMessageParam = {
@@ -73,9 +69,12 @@ CURRENT QUIZ STATE:
                     }
     `).join("\n")}
     
-    The student is currently viewing question ${input.questions.findIndex(x => x.currentlyViewed) + 1}.
+    The student is currently viewing question ${input.questions.findIndex(x => x.isCurrentlyViewed) + 1}.
 ---
-Assess the relevance of previous misunderstandings or gaps in responses to the current question. Use your judgment to decide if and how to incorporate this into your guidance. If relevant, suggest revisiting specific concepts or questions.”
+Assess the relevance of previous misunderstandings or gaps in responses to the current question. Use your judgment to decide if and how to incorporate this into your guidance. If relevant, suggest revisiting specific concepts or questions.
+Prioritize shorter messages at a time to encourage student engagement.
+Do not arbitrarily repeat questions or answers.
+DO NOT PROMPT ABOUT FUTURE QUESTIONS.
 `
             };
 

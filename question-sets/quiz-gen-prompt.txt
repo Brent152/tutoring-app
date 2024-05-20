@@ -19,9 +19,7 @@ Can you create a quiz in this form:
 
 Make the quiz have 10 questions
 
-The questions should be loosely sequential. As in, the ability to answer later questions should be supported by the ability to answer earlier questions.
-
-Make the quiz about trigonometry
+The questions should be loosely sequential. As in, the ability to answer later questions should be supported by the ability to answer earlier questions. However, there does not need to be a direct correlation between them, rather, understanding question 5 should be easier if you understand question 1, but not absolutely required.
 
 
 ---
@@ -30,5 +28,5 @@ Can you explain how the concepts advance? Find any inconsistencies or issues tha
 
 ---
 
-can you redo the quiz to fix some of these issues? Note that the quiz does not have to cover a certain amount of material, but rather must simply progress in a way that the student will learn
+Can you redo the quiz to fix some of these issues? Note that the quiz does not have to cover a certain amount of material, but rather must simply progress in a way that the student will learn
 
