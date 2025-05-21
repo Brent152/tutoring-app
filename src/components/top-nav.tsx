@@ -10,7 +10,7 @@ export function TopNav() {
             <Link href="/"><HomeIcon /></Link>
             <div className='flex gap-4 items-center'>
                 <Link href="/saved-sessions"><BookMarkedIcon /></Link>
-                <Link href="/database-management"><DatabaseIcon /></Link>
+                {/* <Link href="/database-management"><DatabaseIcon /></Link> */}
                 <ModeToggle />
             </div>
         </nav>
