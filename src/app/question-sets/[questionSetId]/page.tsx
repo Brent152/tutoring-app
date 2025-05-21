@@ -167,6 +167,7 @@ export default function QuestionSetPage() {
   async function handleSaveSession(): Promise<void> {
     if (!currentUser) throw new Error('User not found');
     if (!questionSet) throw new Error('Question Set not found');
+    console.log(questionSet.messages)
     const questionSetResult = await saveNewSession.mutateAsync({ userId: currentUser.id, questionSetId: questionSet.id, ...questionSet });
     console.log(questionSetResult)
   }
@@ -211,7 +212,7 @@ export default function QuestionSetPage() {
           header={`Question ${currentQuestionIndex + 1}`}
           onAnswerChange={handleAnswerChange} />
       }
-      <div className='flex justify-between'>
+      <div className='flex justify-between mb-5'>
         <Button
           className='flex gap-2'
           onClick={() => handleQuestionChanged(currentQuestionIndex, currentQuestionIndex - 1)}

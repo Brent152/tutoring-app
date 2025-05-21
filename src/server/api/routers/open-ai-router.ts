@@ -83,7 +83,8 @@ DO NOT PROMPT ABOUT FUTURE QUESTIONS.
             const completion = await openai.chat.completions.create({
                 // model: "gpt-3.5-turbo",
                 // model: "gpt-4-turbo",
-                model: "gpt-4o",
+                // model: "gpt-4o-mini",
+                model: "gpt-4.1",
                 messages: messagesWithContext,
                 temperature: 1,
                 max_tokens: 256,
