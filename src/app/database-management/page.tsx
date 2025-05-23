@@ -39,7 +39,7 @@ export default function DatabaseManagement() {
 
     return (
         <main className="flex flex-col gap-5 mt-5">
-            {/* <h3>Add Question Set</h3>
+            <h3>Add Question Set</h3>
             <Textarea
                 placeholder="Enter question set json"
                 onChange={event => setJsonInput(event.target.value)}
@@ -52,7 +52,7 @@ export default function DatabaseManagement() {
             <div className="flex gap-5">
                 <Input className="w-32 text-cente" placeholder="Set Id" onChange={event => setDeleteIdInput(event.target.value)}/>
                 <Button className="w-48" onClick={deleteQuestionSet}>Delete Question Set</Button>
-            </div> */}
+            </div>
         </main>
     );
 }
