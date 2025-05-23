@@ -1,0 +1,97 @@
+{
+    "title": "Intro to Copyright Law",
+    "subject": "Copyright law basics",
+    "description": "This quiz covers the fundamental concepts of copyright law, including what can be copyrighted, the rights of copyright holders, exceptions, and the basics of infringement and fair use.",
+    "questions": [
+        {
+            "text": "What is the primary purpose of copyright law?",
+            "answers": [
+                { "text": "To protect original works of authorship", "correct": true },
+                { "text": "To regulate patents and trademarks", "correct": false },
+                { "text": "To control all forms of property", "correct": false },
+                { "text": "To prevent all copying of ideas", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following can be protected by copyright?",
+            "answers": [
+                { "text": "A novel", "correct": true },
+                { "text": "An idea for a story", "correct": false },
+                { "text": "A mathematical formula", "correct": false },
+                { "text": "A government document", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is NOT a requirement for a work to be copyrighted?",
+            "answers": [
+                { "text": "It must be original", "correct": false },
+                { "text": "It must be fixed in a tangible medium", "correct": false },
+                { "text": "It must be registered with the government", "correct": true },
+                { "text": "It must show some minimal creativity", "correct": false }
+            ]
+        },
+        {
+            "text": "Who is generally considered the copyright owner of a work?",
+            "answers": [
+                { "text": "The person who created the work", "correct": true },
+                { "text": "Anyone who finds the work", "correct": false },
+                { "text": "The first person to publish the work", "correct": false },
+                { "text": "The government", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is an exclusive right granted to copyright holders?",
+            "answers": [
+                { "text": "The right to reproduce the work", "correct": true },
+                { "text": "The right to patent the work", "correct": false },
+                { "text": "The right to trademark the work", "correct": false },
+                { "text": "The right to seize copies from others", "correct": false }
+            ]
+        },
+        {
+            "text": "How long does copyright protection generally last for works created after 1977 in the U.S.?",
+            "answers": [
+                { "text": "The life of the author plus 70 years", "correct": true },
+                { "text": "20 years from creation", "correct": false },
+                { "text": "Forever", "correct": false },
+                { "text": "10 years from publication", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is an example of fair use?",
+            "answers": [
+                { "text": "Quoting a short passage in a book review", "correct": true },
+                { "text": "Copying an entire book for a friend", "correct": false },
+                { "text": "Selling unauthorized copies of a movie", "correct": false },
+                { "text": "Posting a full song online without permission", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is NOT a factor considered in determining fair use?",
+            "answers": [
+                { "text": "The purpose and character of the use", "correct": false },
+                { "text": "The amount and substantiality of the portion used", "correct": false },
+                { "text": "The popularity of the work", "correct": true },
+                { "text": "The effect of the use on the market for the original", "correct": false }
+            ]
+        },
+        {
+            "text": "What is copyright infringement?",
+            "answers": [
+                { "text": "Using a copyrighted work without permission in a way that violates the copyright holder's rights", "correct": true },
+                { "text": "Creating a new work inspired by another", "correct": false },
+                { "text": "Registering a copyright", "correct": false },
+                { "text": "Citing a source in a research paper", "correct": false }
+            ]
+        },
+        {
+            "text": "Which of the following is a possible consequence of copyright infringement?",
+            "answers": [
+                { "text": "Paying monetary damages", "correct": true },
+                { "text": "Receiving a patent", "correct": false },
+                { "text": "Automatic ownership of the work", "correct": false },
+                { "text": "Exemption from all copyright laws", "correct": false }
+            ]
+        }
+    ]
+}
