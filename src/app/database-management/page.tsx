@@ -15,7 +15,7 @@ export default function DatabaseManagement() {
     const deleteEntireQuestionSet = trpc.questionSetRouter.deleteEntireQuestionSet.useMutation();
 
     const insertQuestionSet = async () => {
-        return; // Commented for production
+        // return; // Commented for production
         const questionSet = JSON.parse(jsonInput) as QuestionSetModel;
         const questionSetResult = await insertEntireQuestionSet.mutateAsync(questionSet);
         if (questionSetResult.success) {
@@ -27,7 +27,7 @@ export default function DatabaseManagement() {
     }
 
     const deleteQuestionSet = async () => {
-        return; // Commented for production
+        // return; // Commented for production
         const deleteResult = await deleteEntireQuestionSet.mutateAsync(Number(deleteIdInput));
         if (deleteResult.success) {
             alert("Deletion successful (to some extent)");
